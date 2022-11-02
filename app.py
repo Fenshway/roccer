@@ -11,3 +11,9 @@ def index():
 @app.get('/settings')
 def settings():
     pass
+
+
+
+@app.post('/profile')
+def profile():
+    pass
