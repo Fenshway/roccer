@@ -8,12 +8,11 @@ def index():
     return render_template('index.html')
 
 
-@app.get('/settings')
-def settings():
-    pass
-
-
-
-@app.post('/profile')
+@app.route('/profile')
 def profile():
-    pass
+    return render_template('profile.html')
+
+
+@app.route('/profile/settings')
+def settings():
+    return render_template('settings.html')
