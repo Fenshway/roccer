@@ -1,0 +1,106 @@
+{% extends '_layout.html' %}
+
+{% block title %}Roccer | Create post{% endblock %}
+{% block style %}
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        background-color: #030303;
+    }
+
+    .containerr {
+        max-width: 1000px;
+        margin: 30px auto;
+    }
+
+    .containerr h1 {
+        color: #D7DADC;
+        font-size: 32px;
+        margin-bottom: 30px;
+        border-bottom: 1px solid #D7DADC;
+        padding-bottom: 20px;
+    }
+
+    .containerr .card {
+        background-color: #1a1a1b;
+    }
+
+    .containerr .top-card {
+        margin: 15px 15px;
+    }
+
+    .containerr .bottom-card {
+        margin: 0px 15px;
+    }
+
+    .containerr .card .top-card textarea {
+        background-color: #1a1a1b;
+        display: block;
+        width: 100%;
+        border-radius: 4px;
+        margin-bottom: 10px;
+        resize: none;
+    }
+
+    .containerr .card .top-card textarea:nth-of-type(1) {
+        padding: 8px 68px 8px 16px;
+    }
+
+    .containerr .card .top-card textarea:nth-of-type(2) {
+        padding: 8px 16px;
+    }
+
+
+    .post-btn {
+        padding: 10px 30px;
+        border: none;
+        border-radius: 9999px;
+    }
+
+    .img-btn {
+        padding: 10px 10px;
+        border-radius: 5px;
+    }
+
+    .url-btn {
+        padding: 10px 20px;
+        border-radius: 5px;
+    }
+
+    .containerr .card .bottom-card {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 10px;
+    }
+</style>
+{% endblock %}
+
+{% block body %}
+<form action="/index" method="post">
+    <div class="containerr">
+        <h1>Create a Post</h1>
+        <div class="card">
+            <div class="top-card">
+                <textarea class="textarea-title" name="" id="" cols="30" rows="1" placeholder="Title"></textarea>
+                <textarea name="textarea-text" id="" cols="30" rows="10" placeholder="Enter text"></textarea>
+            </div>
+
+            <div class="bottom-card">
+                <div>
+                    <button class="img-btn">Image/Video</button>
+                    <button class="url-btn">URL</button>
+                </div>
+
+                <div>
+                    <button type="submit" class="post-btn">Post</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+{% endblock %}
