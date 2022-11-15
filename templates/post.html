@@ -1,0 +1,89 @@
+{% extends '_layout.html' %}
+
+{% block title %}Roccer | Settings{% endblock %}
+
+{% block body %}
+
+<h1>Post Page</h1>
+
+<style>
+    body {
+    background-color: #eee;
+}
+
+.comments {
+  text-decoration: underline;
+  text-underline-position: under;
+  cursor: pointer;
+  padding-right: 15px;
+  padding-left: 5px;
+}
+
+.mb-1{
+    padding-left: 15px;
+}
+
+.ml-2{
+    padding-left: 15px;
+}
+</style>
+
+<body>
+    <div class="container mt-5 mb-5">
+        <div class="d-flex justify-content-center row">
+            <div class="d-flex flex-column col-md-8">
+                <div class="d-flex flex-row align-items-center text-left comment-top p-2 bg-white border-bottom px-4">
+                    <div class="profile-image"><img class="rounded-circle" src="https://img.freepik.com/free-photo/handsome-smiling-young-african-man_171337-9650.jpg" width="70"></div>
+                    <div class="d-flex flex-column ml-3">
+                        <div class="d-flex flex-row post-title">
+                            <h5>Who will win the world cup?</h5> <span>(Username)</span> 
+                        </div>
+                            <div class="d-flex flex-row align-items-center align-content-center post-title"><span class="mr-2 comments">5 comments&nbsp;</span> <span>5 hours ago</span></div>
+                        </div>
+                </div>
+                <div class="coment-bottom bg-white p-2 px-4">
+                    <div class="d-flex flex-row add-comment-section mt-4 mb-4"><img class="img-fluid img-responsive rounded-circle mr-2" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSwakxbAtdNIXNUr4ACC6WLBrjgLFk9DaJp3Q&usqp=CAU" width="50"><input type="text" class="form-control mr-3" placeholder="Add comment"><button class="btn btn-primary" type="button">Comment</button></div>
+                        <div
+                            class="commented-section mt-2">
+                        <div class="d-flex flex-row align-items-center commented-user">
+                            <h5 class="mr-2">Brian Ramirez </h5> <span class="mb-1"> 3 hours ago</span></div>
+                        <div class="comment-text-sm"><span>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</span></div>
+                        <div
+                            class="reply-section">
+                            <div> 
+                                <span class="ml-2">(upvote/downvote)</span>
+                                <span class="ml-2 mt-1"> Reply </span>
+                            </div>
+                        </div>
+                    </div>
+                <div class="commented-section mt-2">
+                    <div class="d-flex flex-row align-items-center commented-user">
+                        <h5 class="mr-2">Kenneth Galio</h5> <span class="mb-1">5 hours ago</span>
+                    </div>
+                    <div class="comment-text-sm"><span>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua..</span></div>
+                    <div class="reply-section">
+                        <div> 
+                            <span class="ml-2">(upvote/downvote)</span>
+                            <span class="ml-2 mt-1">Reply </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="commented-section mt-2">
+                    <div class="d-flex flex-row align-items-center commented-user">
+                        <h5 class="mr-2">Ivan Rojas</h5> <span class="mb-1">8 hours ago</span>
+                    </div>
+                    <div class="comment-text-sm"><span>Nunc sed id semper risus in hendrerit gravida rutrum. Non odio euismod lacinia at quis risus sed. Commodo ullamcorper a lacus vestibulum sed arcu non odio euismod. Enim facilisis gravida neque convallis a. In mollis nunc sed id. Adipiscing elit pellentesque habitant morbi tristique senectus et netus. Ultrices mi tempus imperdiet nulla malesuada pellentesque.</span></div>
+                <div class="reply-section">
+                    <div> 
+                        <span class="ml-2">(upvote/downvote) </span> 
+                        <span class="ml-2 mt-1">Reply </span>
+        
+                    </div>
+                </div>
+                </div> 
+                </div>
+         </div>
+    </div>
+</body>
+
+{% endblock %}

@@ -22,7 +22,12 @@ def profile():
 
 @app.route('/profile/settings')
 def settings():
-    return render_template('settings.html')
+  return render_template('settings.html')
+
+@app.get('/post')
+def post():
+    return render_template('post.html')
+    
 
 @app.route('/profile')
 def profile():
@@ -34,4 +39,3 @@ def profile():
 @app.get('/create_post')
 def create_post():
     return render_template('create_post.html')
-
