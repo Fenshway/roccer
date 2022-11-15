@@ -11,3 +11,7 @@ def index():
 @app.get('/settings')
 def settings():
     pass
+
+@app.route('/profile')
+def profile():
+    return render_template ('profile.html')
