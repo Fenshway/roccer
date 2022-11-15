@@ -11,3 +11,7 @@ def index():
 @app.get('/settings')
 def settings():
     pass
+
+@app.get('/post')
+def post():
+    return render_template('post.html')
