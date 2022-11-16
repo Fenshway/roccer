@@ -14,13 +14,11 @@
   <style>
 
   </style>
-
   <title>{% block title %}{% endblock %}</title>
   {% block style %} {% endblock %}
 </head>
 
 <body>
-
 
   <nav class="navbar navbar-expand-md navbar-dark bg-dark px-5">
     <a class="navbar-brand md-5" href="/">Roccer</a>
@@ -31,16 +29,6 @@
 
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
 
-      <!---<form class="form-inline d-flex mx-auto" id="form_search" name="form_search" method="get" action="">
-        <div class="form-group">
-          <div class="input-group">
-            <input style="width:600px;" class="form-control" placeholder="Search Roccer" type="text">
-            <span class="input-group-btn">
-              <button class="btn btn-light my-sm-0" type="button">Search</button>
-            </span>
-          </div>
-        </div>
-      </form>-->
       <form class="form-inline d-flex mx-auto">
         <input class="form-control me-2" type="search" style="width:600px;" placeholder="Search Roccer">
         <button type="submit" class="btn btn-light">Search</button>
@@ -60,6 +48,16 @@
         </li>
       </ul>
       
+<!-- This might be a little messed up as I currently cannot get the program to run as I did not yet set up the new DB, therefore, I can not test this as of now-->
+      <a href="/create_post">
+        <button type="button" class="btn btn-light px-3 ml-3">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-circle" viewBox="0 0 16 16">
+            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+            <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
+          </svg>
+          Create Post
+        </button>
+      </a>
     </div>
   </nav>
 

@@ -24,17 +24,11 @@ def profile():
 def settings():
   return render_template('settings.html')
 
+
 @app.get('/post')
 def post():
     return render_template('post.html')
-    
 
-@app.route('/profile')
-def profile():
-    return render_template ('profile.html')
-
-
-    
 
 @app.get('/create_post')
 def create_post():
