@@ -42,13 +42,16 @@
             <a class="dropdown-item" href="#">Search</a>
             <a class="dropdown-item" href="/profile">Profile</a>
             <a class="dropdown-item" href="/profile/settings">Settings</a>
+            <a class="dropdown-item" href="/register_form">Temp register</a>
+            <a class="dropdown-item" href="/login_page">Temp login</a>
             <div class="dropdown-divider"></div>
-            <a class="dropdown-item" href="#">Logout</a>
+            <form action="/logout" method="post">
+              <button type="submit" class="btn btn-primary">Logout</button>
+            </form>
           </div>
         </li>
       </ul>
       
-<!-- This might be a little messed up as I currently cannot get the program to run as I did not yet set up the new DB, therefore, I can not test this as of now-->
       <a href="/create_post">
         <button type="button" class="btn btn-light px-3 ml-3">
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-circle" viewBox="0 0 16 16">

@@ -14,7 +14,7 @@ comment_vote = db.Table(
     'comment_vote',
     db.Column('user_account_id', db.Integer, \
         db.ForeignKey('user_account.user_account_id'), primary_key=True),
-    db.Column('post_id', db.Integer, \
+    db.Column('post_id', db.Integer,
         db.ForeignKey('post.post_id'), primary_key=True),
     db.Column('upvote', db.Boolean, nullable=False)
 )
@@ -25,7 +25,6 @@ class User_account(db.Model):
     last_name = db.Column(db.String, nullable=False)
     username = db.Column(db.String, nullable=False)
     user_password = db.Column(db.String, nullable=False)
-    created_at = db.Column(db.TIMESTAMP(timezone=True), nullable=False)
 
 
 class Post(db.Model):
