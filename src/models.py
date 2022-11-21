@@ -14,7 +14,7 @@ comment_vote = db.Table(
     'comment_vote',
     db.Column('user_account_id', db.Integer, \
         db.ForeignKey('user_account.user_account_id'), primary_key=True),
-    db.Column('post_id', db.Integer,
+    db.Column('post_id', db.Integer, \
         db.ForeignKey('post.post_id'), primary_key=True),
     db.Column('upvote', db.Boolean, nullable=False)
 )
