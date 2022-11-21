@@ -26,13 +26,14 @@ class User_account(db.Model):
     last_name = db.Column(db.String, nullable=False)
     username = db.Column(db.String, nullable=False)
     user_password = db.Column(db.String, nullable=False)
-    created_at = db.Column(db.TIMESTAMP(timezone=False), nullable=False)
+    created_at = db.Column(db.TIMESTAMP(timezone=False), nullable=False, default=datetime.utcnow)
 
     def __init__(self, first_name, last_name, username, password):
         self.first_name = first_name
         self.last_name = last_name
         self.username = username
         self.user_password = password
+    
 
 
 
@@ -44,7 +45,7 @@ class Post(db.Model):
     stored_video_path = db.Column(db.String, nullable=True)
     stored_image_path = db.Column(db.String, nullable=True)
     post_text = db.Column(db.String, nullable=True)
-    created_at = db.Column(db.TIMESTAMP(timezone=False), nullable=False)
+    created_at = db.Column(db.TIMESTAMP(timezone=False), nullable=False, default=datetime.utcnow)
     posted_by_id = db.Column(db.Integer,\
         db.ForeignKey('user_account.user_account_id'), nullable=True)
         
@@ -90,7 +91,7 @@ class Post(db.Model):
 class User_comment(db.Model):
     comment_id = db.Column(db.Integer, primary_key=True)
     comment_text = db.Column(db.String, nullable=False)
-    created_at = db.Column(db.TIMESTAMP(timezone=True), nullable=False)
+    created_at = db.Column(db.TIMESTAMP(timezone=True), nullable=False, default=datetime.utcnow)
 
     parent_post_id = db.Column(db.Integer,\
         db.ForeignKey('post.post_id'), nullable=True)
