@@ -90,11 +90,6 @@
 </style>
 {% endblock %}
 {% block body %}
-
-  <input id="postID" name="postU" type="hidden"/>
-  <input id="vote" name="postU" type="hidden"/>
-
-
 <script src="https://code.jquery.com/jquery-3.5.1.js"
 integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc="
 crossorigin="anonymous"></script>
@@ -133,8 +128,6 @@ function updateVote(postID) {
   }
   
   function votePressed(postID, vote,index) {
-
-    document.getElementById("postID").value = postID;
     newState = 0
     if (vote == "upvote") {
       if (currentVoteStates[index] == 1) {
@@ -149,13 +142,12 @@ function updateVote(postID) {
         newState= 2;
       }
     }
-    document.getElementById("vote").value = newState;
       $.ajax({
           type:'POST',
           url:'/',
           data:{
-            post:$('#postID').val(),
-            vote:$('#vote').val()
+            post: postID,
+            vote: newState
           },
           success:function()
           {
