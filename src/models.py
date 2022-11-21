@@ -1,4 +1,5 @@
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import func
 db = SQLAlchemy()
 from datetime import datetime
 
@@ -26,7 +27,7 @@ class User_account(db.Model):
     last_name = db.Column(db.String, nullable=False)
     username = db.Column(db.String, nullable=False)
     user_password = db.Column(db.String, nullable=False)
-    created_at = db.Column(db.TIMESTAMP(timezone=False), nullable=False, default=datetime.utcnow)
+    created_at = db.Column(db.TIMESTAMP(timezone=False), nullable=False, server_default=func.now())
 
     def __init__(self, first_name, last_name, username, password):
         self.first_name = first_name
@@ -45,7 +46,7 @@ class Post(db.Model):
     stored_video_path = db.Column(db.String, nullable=True)
     stored_image_path = db.Column(db.String, nullable=True)
     post_text = db.Column(db.String, nullable=True)
-    created_at = db.Column(db.TIMESTAMP(timezone=False), nullable=False, default=datetime.utcnow)
+    created_at = db.Column(db.TIMESTAMP(timezone=False), nullable=False, server_default=func.now())
     posted_by_id = db.Column(db.Integer,\
         db.ForeignKey('user_account.user_account_id'), nullable=True)
         
@@ -91,7 +92,7 @@ class Post(db.Model):
 class User_comment(db.Model):
     comment_id = db.Column(db.Integer, primary_key=True)
     comment_text = db.Column(db.String, nullable=False)
-    created_at = db.Column(db.TIMESTAMP(timezone=True), nullable=False, default=datetime.utcnow)
+    created_at = db.Column(db.TIMESTAMP(timezone=True), nullable=False, server_default=func.now())
 
     parent_post_id = db.Column(db.Integer,\
         db.ForeignKey('post.post_id'), nullable=True)
