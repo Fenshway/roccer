@@ -4,6 +4,8 @@ from dotenv import load_dotenv
 from src.models import db, User_account
 from flask_bcrypt import Bcrypt
 from src.repositories.user_account_repository import user_repository_singleton
+from src.repositories.post_repository import post_repository_singleton
+
 
 load_dotenv()
 
@@ -16,9 +18,16 @@ db.init_app(app)
 
 bcrypt = Bcrypt(app)
 
-@app.get('/')
+@app.route('/', methods=['POST', 'GET'])
 def index():
-    return render_template('index.html')
+    if request.method == 'POST':
+        postID = request.form.get("post")
+        vote = request.form.get("vote")
+        ##TODO update vote status on server
+        print(postID, vote)
+    all_posts = post_repository_singleton.get_all_posts()
+    return render_template('index.html', posts = all_posts)
+
 
 
 @app.route('/profile')
@@ -65,7 +74,7 @@ def register():
     hashed_bytes = bcrypt.generate_password_hash(password, int(os.getenv('BCRYPT_ROUNDS')))
     hashed_password = hashed_bytes.decode('utf-8')
 
-    new_user = user_repository_singleton.create_account(first_name, last_name, username, hashed_password)
+    new_user = user_repository_singleton.create_user(first_name, last_name, username, hashed_password)
     flash('Account created successfully.')
     return redirect('/profile')
 
@@ -83,14 +92,14 @@ def login():
         flash('Error logging in. Please try again.')
         return redirect('/login_page')
 
-    if not bcrypt.check_password_hash(existing_user.user_password, password):
+    if not bcrypt.check_password_hash(existing_user.password, password):
         flash('Error logging in. Please try again.')
         return redirect('/login_page')
 
     session['user'] = {
         'user_account_id': existing_user.user_account_id
     }
-    flash('Logged in. Remove this flash code before deployement')
+    flash('I'll delete this message soon. You are logged in.')
     return redirect('/')
 
 @app.post('/logout')
