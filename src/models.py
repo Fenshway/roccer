@@ -34,9 +34,6 @@ class User_account(db.Model):
         self.last_name = last_name
         self.username = username
         self.user_password = password
-    
-
-
 
 class Post(db.Model):
     post_id = db.Column(db.Integer, primary_key=True)

@@ -1,0 +1,46 @@
+{% extends '_layout.html' %}
+
+{% block title %}Roccer | Account Creation{% endblock %}
+
+{% block body %}
+
+<!--FLASH MESSAGES-->
+{% for message in get_flashed_messages() %}
+  <div class="alert alert-warning alert-dismissible fade show" role="alert">
+    <strong>{{message}}</strong>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
+{% endfor %}
+
+<h1>Create your account</h1>
+
+<form action="/register" method="post">
+    <div class="form-row">
+      <div class="form-group col-md-6">
+        <label for="firstname">First Name</label>
+        <input type="text" class="form-control" name="firstname" id="firstname" placeholder="Enter First name">
+      </div>
+      <div class="form-group col-md-6">
+        <label for="lastname">Last Name</label>
+        <input type="text" class="form-control" name="lastname" id="lastname" placeholder="Enter Last name">
+      </div>
+    </div>
+    <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" class="form-control" name="email" id="email" placeholder="Enter Email">
+      </div>
+    <div class="form-group">
+      <label for="username">Username</label>
+      <input type="username" class="form-control" name="username" id="username" placeholder="Enter Username">
+    </div>
+    <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" class="form-control" name="password" id="password" placeholder="Enter Password">
+    </div>
+    <div class="form-group">
+        <label for="password2">Reenter Password</label>
+        <input type="password" class="form-control" name="password2" id="password2" placeholder="Reenter Password">
+    </div>
+    <button type="submit" class="btn btn-primary">Create</button>
+</form>
+{% endblock %}

@@ -16,5 +16,3 @@ class UserRepository:
         return new_user
 
 user_repository_singleton = UserRepository()
-
-
