@@ -97,17 +97,7 @@ crossorigin="anonymous"></script>
 <script>
 
 var currentVoteStates = [];
-
-function updateVote(postID) {
-
-  }
-
-  function updateDownVote(postID) {
-    document.getElementById("postD").value = postID;
-  }
-
   function updatePostVoteUI(at) {
-    
     switch(currentVoteStates[at]) {
       case 0:
         document.getElementById(at.toString() + "downvote").innerHTML = '<img src="static/assets/downvote-unselected.png">';
