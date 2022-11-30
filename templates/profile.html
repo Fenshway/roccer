@@ -1,84 +1,144 @@
 {% extends '_layout.html' %}
 
 {% block title %}Roccer | Profile{% endblock %}
+{% block style %}
+<style>
+  #profile {
+    display: none;
+  }
+
+  .profile-image {
+    position: relative;
+  }
+
+  .profile-image img {
+    border-radius: 50%;
+    object-fit: cover;
+    height: 125px;
+    width: 125px;
+  }
+
+  .profile-image div {
+    position: absolute;
+    top: 0;
+    background-color: hsl(0, 100%, 0%, 60%);
+    width: 100%;
+    height: 100%;
+    z-index: 999;
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+    border-radius: 50%;
+  }
+
+  .profile-image div:hover {
+    opacity: 1;
+    cursor: pointer;
+  }
+
+  .profile-image div span {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+  }
+</style>
+
+{% endblock %}
 
 {% block body %}
 
 {% for message in get_flashed_messages() %}
-  <h1>{{message}}</h1>
+<h1>{{message}}</h1>
 {% endfor %}
-
-<div class="row gutters-sm">
+<form action="/profile" method="post" enctype="multipart/form-data">
+  <div class="row gutters-sm">
     <div class="col-md-4 mb-3">
       <div class="card">
         <div class="card-body">
           <div class="d-flex flex-column align-items-center text-center">
-            <img src="https://img.icons8.com/bubbles/100/000000/user.png" alt="Admin" class="rounded-circle" width="150">
+
+
+
+            <div class="profile-image">
+              <label for="profile">
+                <input type="file" name="profile" id="profile" required />
+                <img src="/static/assets/profile-pics/{{ profile_path }}" alt="Admin" class="icon">
+                <!-- <img src="https://img.icons8.com/bubbles/100/000000/user.png" alt="Admin" class="icon" width="125"> -->
+                <div>
+                  <span>Upload File</span>
+                </div>
+              </label>
+            </div>
+
+
+
             <div class="mt-3">
-              <h4>Yuanjie</h4>
+              <h4>{{first_name}}</h4>
               <p class="text-secondary mb-1">Student at UNCC</p>
               <p class="text-muted font-size-sm">Charlotte,NC</p>
               <button class="btn btn-primary">Edit</button>
+              <button type="submit" class="btn btn-primary">Apply Changes</button>
             </div>
           </div>
         </div>
       </div>
-
     </div>
-    <div class="col-md-8">
-      <div class="card mb-3">
-        <div class="card-body">
-          <div class="row">
-            <div class="col-sm-3">
-              <h6 class="mb-0">Full Name</h6>
-            </div>
-            <div class="col-sm-9 text-secondary">
-              Yuanjie Zhang
-            </div>
-          </div>
-          <hr>
-          <div class="row">
-            <div class="col-sm-3">
-              <h6 class="mb-0">Email</h6>
-            </div>
-            <div class="col-sm-9 text-secondary">
-              123@gmail.com
-            </div>
-          </div>
-          <hr>
-          <div class="row">
-            <div class="col-sm-3">
-              <h6 class="mb-0">Phone</h6>
-            </div>
-            <div class="col-sm-9 text-secondary">
-              (123)-456-7777
-            </div>
-          </div>
-          <hr>
-          <div class="row">
-            <div class="col-sm-3">
-              <h6 class="mb-0">Mobile</h6>
-            </div>
-            <div class="col-sm-9 text-secondary">
-              (919)-123-5777
-            </div>
-          </div>
-          <hr>
-          <div class="row">
-            <div class="col-sm-3">
-              <h6 class="mb-0">Address</h6>
-            </div>
-            <div class="col-sm-9 text-secondary">
-              UNCC, Charlotte, NC
-            </div>
-          </div>
-          <hr>
-          <div class="row">
-            <div class="col-sm-12">
-              <a class="btn btn-info " target="__blank" >Edit</a>
-            </div>
-          </div>
+</form>
+<div class="col-md-8">
+  <div class="card mb-3">
+    <div class="card-body">
+      <div class="row">
+        <div class="col-sm-3">
+          <h6 class="mb-0">Full Name</h6>
+        </div>
+        <div class="col-sm-9 text-secondary">
+          {{first_name}} {{last_name}}
         </div>
       </div>
+      <hr>
+      <div class="row">
+        <div class="col-sm-3">
+          <h6 class="mb-0">Username</h6>
+        </div>
+        <div class="col-sm-9 text-secondary">
+          {{username}}
+        </div>
+      </div>
+      <hr>
+      <!-- <div class="row">
+        <div class="col-sm-3">
+          <h6 class="mb-0"></h6>
+        </div>
+        <div class="col-sm-9 text-secondary">
+          (123)-456-7777
+        </div>
+      </div>
+      <hr>
+      <div class="row">
+        <div class="col-sm-3">
+          <h6 class="mb-0">Mobile</h6>
+        </div>
+        <div class="col-sm-9 text-secondary">
+          (919)-123-5777
+        </div>
+      </div>
+      <hr>
+      <div class="row">
+        <div class="col-sm-3">
+          <h6 class="mb-0">Address</h6>
+        </div>
+        <div class="col-sm-9 text-secondary">
+          UNCC, Charlotte, NC
+        </div>
+      </div> -->
+      <hr>
+      <div class="row">
+        <div class="col-sm-12">
+          <a class="btn btn-info " target="__blank">Edit</a>
+        </div>
+      </div>
+    </div>
+  </div>
 
-{% endblock %}
+  {% endblock %}

@@ -13,6 +13,7 @@ class PostRepository:
         db.session.add(new_post)
         db.session.commit()
         return new_post
+        
     def create_post_stored_video(self, title, video_path, posted_by_id):
         new_post = Post(title, 'stored_video', None, video_path, None, None, posted_by_id)
         db.session.add(new_post)
