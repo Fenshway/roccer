@@ -25,15 +25,17 @@ class User_account(db.Model):
     user_account_id = db.Column(db.Integer, primary_key=True)
     first_name = db.Column(db.String, nullable=False)
     last_name = db.Column(db.String, nullable=False)
-    username = db.Column(db.String, nullable=False)
+    username = db.Column(db.String, nullable=False, unique=True)
     user_password = db.Column(db.String, nullable=False)
+    profile_path = db.Column(db.String, nullable=False)
     created_at = db.Column(db.TIMESTAMP(timezone=False), nullable=False, server_default=func.now())
 
-    def __init__(self, first_name, last_name, username, password):
+    def __init__(self, first_name, last_name, username, password, profile_path):
         self.first_name = first_name
         self.last_name = last_name
         self.username = username
         self.user_password = password
+        self.profile_path = profile_path
 
 class Post(db.Model):
     post_id = db.Column(db.Integer, primary_key=True)

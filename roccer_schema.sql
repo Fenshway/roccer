@@ -9,8 +9,9 @@ CREATE TABLE IF NOT EXISTS user_account (
 	user_account_id SERIAL NOT NULL,
 	first_name VARCHAR(255) NOT NULL,
 	last_name VARCHAR(255) NOT NULL,
-	username VARCHAR(255) NOT NULL,
+	username VARCHAR(255) NOT NULL UNIQUE,
 	user_password VARCHAR(255) NOT NULL,
+	profile_path VARCHAR(255) NOT NULL,
 	created_at timestamp NOT NULL DEFAULT now(),
 	PRIMARY KEY (user_account_id),
 	UNIQUE (username)

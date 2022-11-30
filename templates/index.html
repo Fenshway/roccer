@@ -3,90 +3,104 @@
 {% block title %}Roccer | Home{% endblock %}
 {% block style %}
 <style>
-.post-container {
-  padding-top: 20pt;
-  padding-left: 20pt;
-  padding-right: 20pt;
-  padding-bottom: 1pt;
-  background-color: white;
-}
-.container-h {
-  padding-top: 5pt;
-  padding-bottom: 5pt;
-  max-width: 600pt;
+  .post-container {
+    padding-top: 20pt;
+    padding-left: 20pt;
+    padding-right: 20pt;
+    padding-bottom: 1pt;
+    background-color: white;
+  }
 
-}
-.header-container {
-  display: flex;
-}
-.vote-container {
-  display: flex ;
-  flex-direction: column;
-  padding-right: 50px;
-  width: 25px;
-}
+  .container-h {
+    padding-top: 5pt;
+    padding-bottom: 5pt;
+    max-width: 600pt;
 
-.content-container {
-  padding-left: 50px;
-}
-.container {
-  background-color: #DBE0E5;
-}
+  }
 
-.vote-button {
+  .header-container {
+    display: flex;
+  }
+
+  .vote-container {
+    display: flex;
+    flex-direction: column;
+    padding-right: 50px;
+    width: 25px;
+  }
+
+  .content-container {
+    padding-left: 50px;
+  }
+
+  .container {
+    background-color: #DBE0E5;
+  }
+
+  .vote-button {
     display: inline-block;
     height: 30px;
     padding: 0;
     margin: 0;
     vertical-align: top;
     width: 30px;
-    outline:  none;
+    outline: none;
     border: none;
     background-color: white;
-}
+  }
 
-.upvote img {
+  .upvote img {
     display: block;
-    height: 25px;  
+    height: 25px;
     width: 25px;
-}
+  }
 
-.downvote img {
+  .downvote img {
     display: block;
-    height: 25px;  
+    height: 25px;
     width: 25px;
-}
+  }
 
-.center {
-  margin: auto;
-  width:25px;
-  text-align: center;
+  .center {
+    margin: auto;
+    width: 25px;
+    text-align: center;
 
-}
+  }
 
-.background {
-  background-color: #DBE0E5;
-}
+  .background {
+    background-color: #DBE0E5;
+  }
 
 
 
-.wrap {
-  display: flex;
-  flex-direction: column;
-  width: 80vw;
-  height: 80vh;
-  border: 2px solid blue;
-  min-height: 0;
-}
+  .wrap {
+    display: flex;
+    flex-direction: column;
+    width: 80vw;
+    height: 80vh;
+    border: 2px solid blue;
+    min-height: 0;
+  }
 
-.frame {
- flex: 1 1 auto;
- border: 0;
-}
+  .frame {
+    flex: 1 1 auto;
+    border: 0;
+  }
 
-.light {
-  color: gray;
-}
+  .light {
+    color: gray;
+  }
+
+  .stored_img img {
+    width: 100%;
+    height: 350px;
+  }
+
+  .stored_vid video {
+    width: 100%;
+    height: 350px;
+  }
 </style>
 {% endblock %}
 {% block body %}
@@ -100,15 +114,14 @@
 {% endfor %}
 -->
 
-<script src="https://code.jquery.com/jquery-3.5.1.js"
-integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc="
-crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc="
+  crossorigin="anonymous"></script>
 
 <script>
 
-var currentVoteStates = [];
+  var currentVoteStates = [];
   function updatePostVoteUI(at) {
-    switch(currentVoteStates[at]) {
+    switch (currentVoteStates[at]) {
       case 0:
         document.getElementById(at.toString() + "downvote").innerHTML = '<img src="static/assets/downvote-unselected.png">';
         document.getElementById(at.toString() + "upvote").innerHTML = '<img src="static/assets/upvote-unselected.png">';
@@ -126,8 +139,8 @@ var currentVoteStates = [];
         break
     }
   }
-  
-  function votePressed(postID, vote,index) {
+
+  function votePressed(postID, vote, index) {
     newState = 0
     if (vote == "upvote") {
       if (currentVoteStates[index] == 1) {
@@ -139,72 +152,81 @@ var currentVoteStates = [];
       if (currentVoteStates[index] == 2) {
         newState = 0;
       } else {
-        newState= 2;
+        newState = 2;
       }
     }
-      $.ajax({
-          type:'POST',
-          url:'/',
-          data:{
-            post: postID,
-            vote: newState
-          },
-          success:function()
-          {
-            currentVoteStates[index] = newState;
-            updatePostVoteUI(index);
-          }
-        })
+    $.ajax({
+      type: 'POST',
+      url: '/',
+      data: {
+        post: postID,
+        vote: newState
+      },
+      success: function () {
+        currentVoteStates[index] = newState;
+        updatePostVoteUI(index);
+      }
+    })
   }
 
 
-  </script>
-  {% if posts == [] %}
+</script>
+{% if posts == [] %}
 <h2 class="text-center">Nothing to see here. Create a post by selecting the 'create post' button</h2>
-  {% endif %}
-  {% if posts != {} %}
-  <div class="background">
-    {% for post in posts %}
-    <div class="container container-h" >
-      <div class="post-container" >
-        <div class="header-container">
-          <div class="vote-container">
-            <button id="{{ loop.index|string }}upvote" class="vote-button upvote" onclick="votePressed('{{post.post_id}}', 'upvote', '{{loop.index}}')"><img src="static/assets/upvote-unselected.png"></button>
-            <h6 id="{{ post.post_id|string }}count"class="center">1</h6>
-            <button id="{{ loop.index|string }}downvote" class="vote-button downvote" onclick="votePressed('{{post.post_id}}', 'downvote', '{{loop.index}}')"><img src="static/assets/downvote-unselected.png"></button>
-          </div>
-          <div >
-            <p class="light">Posted by u/{{post.posted_by.username}} {{post.get_time_text()}}</p>
-            <h3>{{post.title}}</h3>
-          </div>
+{% endif %}
+{% if posts != {} %}
+<div class="background">
+  {% for post in posts %}
+  <div class="container container-h">
+    <div class="post-container">
+      <div class="header-container">
+        <div class="vote-container">
+          <button id="{{ loop.index|string }}upvote" class="vote-button upvote"
+            onclick="votePressed('{{post.post_id}}', 'upvote', '{{loop.index}}')"><img
+              src="static/assets/upvote-unselected.png"></button>
+          <h6 id="{{ post.post_id|string }}count" class="center">1</h6>
+          <button id="{{ loop.index|string }}downvote" class="vote-button downvote"
+            onclick="votePressed('{{post.post_id}}', 'downvote', '{{loop.index}}')"><img
+              src="static/assets/downvote-unselected.png"></button>
         </div>
-        <div class="content-container">
-          {% if post.post_type == "text" %}
-          <p > {{post.post_text}}</p>
-          {% endif %}
-
-          {% if post.post_type == "embedded_video" %}
-          <iframe width=100% height="350"
-          src= '{{post.embedded_video_link}}' frameborder="0" allowfullscreen>
-          
-        </iframe>
-          {% endif %}
-          {% if post.post_type == "stored_video" %}
-          <!--TODO display video stored on server-->
-          {% endif %}
-
-          {% if post.post_type == "stored_image" %}
-          <!--TODO display image stored on server-->
-          {% endif %}
+        <div>
+          <p class="light">Posted by u/{{post.posted_by.username}} {{post.get_time_text()}}</p>
+          <h3>{{post.title}}</h3>
         </div>
-        <p class="light content-container">{{post.comments|length}} comments</p>
       </div>
+      <div class="content-container">
+        {% if post.post_type == "text" %}
+        <p> {{post.post_text}}</p>
+        {% endif %}
+
+        {% if post.post_type == "embedded_video" %}
+        <iframe width=100% height="350" src='{{post.embedded_video_link}}' frameborder="0" allowfullscreen>
+
+        </iframe>
+        {% endif %}
+        {% if post.post_type == "stored_video" %}
+        <div class="stored_vid">
+          <video controls>
+            <source src="/static/assets/post_videos/{{post.stored_video_path}}" type="video/mp4">
+          </video>
+        </div>
+        {% endif %}
+
+        {% if post.post_type == "stored_image" %}
+        <div class="stored_img">
+          <img src="/static/assets/post_images/{{post.stored_image_path}}" alt="">
+        </div>
+
+        {% endif %}
+      </div>
+      <p class="light content-container">{{post.comments|length}} comments</p>
     </div>
-
-    
-
-    {% endfor %}  
   </div>
-  {% endif %}
+
+
+
+  {% endfor %}
+</div>
+{% endif %}
 
 {% endblock %}
