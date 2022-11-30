@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request, redirect, flash, session
+from werkzeug.utils import secure_filename
 import os
 from dotenv import load_dotenv
 from src.models import db, User_account, User_comment, Post
@@ -30,12 +31,43 @@ def index():
 
 
 
-@app.route('/profile')
+@app.get('/profile')
 def profile():
+    if 'user' not in session:
+        return redirect('/')
+
+    first_name=session['user']['first_name']
+    last_name=session['user']['last_name']
+    username=session['user']['username']
+    profile_path=session['user']['profile_path']
+    
+    return render_template('profile.html', first_name=first_name, last_name=last_name, username=username, profile_path=profile_path)
+
+@app.post('/profile')
+def update_profile_pic():
+    # ---------------INCOMPLETE. Will finish -Ivan--------------
+
+    
+    # if 'profile' not in request.files:
+    #     return redirect('/profile')
+
+    # profile_picture = request.files['profile']
+
+    # if profile_picture.filename == '':
+    #     return redirect('/profile')
+    
+    # if profile_picture.filename.rsplit('.', 1)[1].lower() not in ['jpg', 'jpeg', 'gif', 'png']:
+    #     return redirect('/profile')
+
+    # safe_filename = secure_filename(profile_picture.filename)
+
+    # profile_picture.save(os.path.join('static/assets', 'profile-pics', safe_filename))
+
+    
     return render_template('profile.html')
 
 
-@app.route('/profile/settings')
+@app.get('/profile/settings')
 def settings():
   return render_template('settings.html')
 
@@ -68,8 +100,52 @@ def post():
 #     return redirect('/post')
 
 @app.get('/create_post')
-def create_post():
+def get_create_post():
     return render_template('create_post.html')
+
+@app.post('/create_post')
+def create_post():
+    title = request.form.get('title')
+    text = request.form.get('text')
+    image = request.files['image']
+    video = request.files['video']
+    url = request.form.get('url')
+    embed_video = url.replace("watch?v=", "embed/")
+    
+
+    if title and text:
+        post_repository_singleton.create_post_text(title, text, session['user']['user_account_id'])
+    elif title and image:
+        if 'image' not in request.files:
+            return redirect('/create_post')
+
+        if image.filename == '':
+            return redirect('/create_post')
+    
+        if image.filename.rsplit('.', 1)[1].lower() not in ['jpg', 'jpeg', 'gif', 'png']:
+            return redirect('/create_post')
+        
+        safe_image_file = secure_filename(image.filename)
+        image.save(os.path.join('static/assets', 'post_images', safe_image_file))
+
+        post_repository_singleton.create_post_stored_image(title, safe_image_file, session['user']['user_account_id'])
+    elif title and url:
+        post_repository_singleton.create_post_embedded_video(title, embed_video, session['user']['user_account_id'])
+    elif title and video:
+        safe_video_file = secure_filename(video.filename)
+        video.save(os.path.join('static/assets', 'post_videos', safe_video_file))
+        
+        post_repository_singleton.create_post_stored_video(title, safe_video_file, session['user']['user_account_id'])
+    else:
+        return redirect('/create_post')
+
+    return redirect('/')
+    
+    
+        
+    
+
+
 
 @app.get('/register_form')
 def register_form():
@@ -96,11 +172,26 @@ def register():
     hashed_bytes = bcrypt.generate_password_hash(password, int(os.getenv('BCRYPT_ROUNDS')))
     hashed_password = hashed_bytes.decode('utf-8')
 
-    new_user = user_repository_singleton.create_user(first_name, last_name, username, hashed_password)
+    if 'profile' not in request.files:
+        return redirect('/profile')
+
+    profile_picture = request.files['profile']
+
+    if profile_picture.filename == '':
+        return redirect('/profile')
+    
+    if profile_picture.filename.rsplit('.', 1)[1].lower() not in ['jpg', 'jpeg', 'gif', 'png']:
+        return redirect('/profile')
+
+    safe_filename = secure_filename(f'{username}-{profile_picture.filename}')
+
+    profile_picture.save(os.path.join('static/assets', 'profile-pics', safe_filename))
+
+    new_user = user_repository_singleton.create_user(first_name, last_name, username, hashed_password, safe_filename)
     flash('Account created successfully.')
     return redirect('/profile')
 
-@app.route('/login_page')
+@app.get('/login_page')
 def login_page():
     return render_template('login.html')
 
@@ -114,13 +205,19 @@ def login():
         flash('Error logging in. Please try again.')
         return redirect('/login_page')
 
-    if not bcrypt.check_password_hash(existing_user.password, password):
+    if not bcrypt.check_password_hash(existing_user.user_password, password):
         flash('Error logging in. Please try again.')
         return redirect('/login_page')
 
     session['user'] = {
-        'user_account_id': existing_user.user_account_id
+        'user_account_id': existing_user.user_account_id,
+        'first_name': existing_user.first_name,
+        'last_name': existing_user.last_name,
+        'username': existing_user.username,
+        'user_account_id': existing_user.user_account_id,
+        'profile_path': existing_user.profile_path,
     }
+
     flash('I will delete this message soon. You are logged in.')
     return redirect('/')
 
@@ -129,6 +226,18 @@ def logout():
     session.pop('user')
     return redirect('/')
 
-#@app.post('/delete')
-#def delete():
-#    user_to_delete = User_account.query.filter_by()
+
+@app.post('/delete')
+def delete():
+    user_to_delete = User_account.query.filter_by('username')
+    db.session.delete(user_to_delete)
+    db.session.commit()
+    return render_template('index.html')
+   user_to_delete = User_account.query.filter_by()
+
+@app.post('/search')
+def search():
+    topic = request.form.get('topic')
+    searched_posts = post_repository_singleton.search_post(topic)
+    return render_template('index.html', posts = searched_posts)
+

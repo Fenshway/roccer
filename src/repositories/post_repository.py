@@ -13,6 +13,7 @@ class PostRepository:
         db.session.add(new_post)
         db.session.commit()
         return new_post
+        
     def create_post_stored_video(self, title, video_path, posted_by_id):
         new_post = Post(title, 'stored_video', None, video_path, None, None, posted_by_id)
         db.session.add(new_post)
@@ -31,8 +32,9 @@ class PostRepository:
         db.session.commit()
         return new_post
 
-    def search_post(self, post_title, user_id, post_type):
-        pass
+    def search_post(self, post_title):
+        searched_post = Post.query.filter(Post.title.ilike("%"+post_title+"%"))
+        return searched_post
     
 
 post_repository_singleton = PostRepository()
