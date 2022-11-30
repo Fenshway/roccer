@@ -195,7 +195,9 @@ def login():
         'user_account_id': existing_user.user_account_id,
         'profile_path': existing_user.profile_path,
     }
-    flash('Ill delete this message soon. You are logged in.')
+
+    flash('I will delete this message soon. You are logged in.')
+
     return redirect('/')
 
 @app.post('/logout')
@@ -203,6 +205,18 @@ def logout():
     session.pop('user')
     return redirect('/')
 
-#@app.post('/delete')
-#def delete():
-#    user_to_delete = User_account.query.filter_by()
+
+@app.post('/delete')
+def delete():
+    user_to_delete = User_account.query.filter_by('username')
+    db.session.delete(user_to_delete)
+    db.session.commit()
+    return render_template('index.html')
+   user_to_delete = User_account.query.filter_by()
+
+@app.post('/search')
+def search():
+    topic = request.form.get('topic')
+    searched_posts = post_repository_singleton.search_post(topic)
+    return render_template('index.html', posts = searched_posts)
+

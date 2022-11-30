@@ -32,8 +32,9 @@ class PostRepository:
         db.session.commit()
         return new_post
 
-    def search_post(self, post_title, user_id, post_type):
-        pass
+    def search_post(self, post_title):
+        searched_post = Post.query.filter(Post.title.ilike("%"+post_title+"%"))
+        return searched_post
     
 
 post_repository_singleton = PostRepository()
