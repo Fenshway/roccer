@@ -87,6 +87,10 @@
 .light {
   color: gray;
 }
+
+.post-title{
+    color: black;
+}
 </style>
 {% endblock %}
 {% block body %}
@@ -175,7 +179,7 @@ var currentVoteStates = [];
           </div>
           <div >
             <p class="light">Posted by u/{{post.posted_by.username}} {{post.get_time_text()}}</p>
-            <h3>{{post.title}}</h3>
+            <a class="post-title" href="/post"><h3>{{post.title}}</h3></a> 
           </div>
         </div>
         <div class="content-container">

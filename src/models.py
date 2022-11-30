@@ -28,6 +28,7 @@ class User_account(db.Model):
     username = db.Column(db.String, nullable=False)
     user_password = db.Column(db.String, nullable=False)
     created_at = db.Column(db.TIMESTAMP(timezone=False), nullable=False, server_default=func.now())
+    # comments = db.relationship('User_comment', backref='User_account', passive_deletes=True)
 
     def __init__(self, first_name, last_name, username, password):
         self.first_name = first_name
@@ -49,6 +50,8 @@ class Post(db.Model):
         
     posted_by = db.relationship('User_account', backref='posts')
     votes = db.relationship('User_account', secondary=post_vote, backref='votes')
+
+    comments = db.relationship('User_comment', backref='post ', passive_deletes=True)
 
     def __init__(self, title, post_type, embedded_video_link, stored_video_path, stored_image_path, post_text, posted_by_id):
         self.title = title
@@ -89,14 +92,14 @@ class Post(db.Model):
 class User_comment(db.Model):
     comment_id = db.Column(db.Integer, primary_key=True)
     comment_text = db.Column(db.String, nullable=False)
-    created_at = db.Column(db.TIMESTAMP(timezone=True), nullable=False, server_default=func.now())
+    # created_at = db.Column(db.TIMESTAMP(timezone=True), server_default=func.now())
 
     parent_post_id = db.Column(db.Integer,\
         db.ForeignKey('post.post_id'), nullable=True)
-    parent_post = db.relationship('Post', backref= 'comments')
-    parent_comment_id = db.Column(db.Integer,\
-        db.ForeignKey('user_comment.comment_id'), nullable=True)
-    commented_by_id = db.Column(db.Integer,\
-        db.ForeignKey('user_account.user_account_id'), nullable=True)
-    commented_by = db.relationship('User_account', backref='comments')
+    # parent_post = db.relationship('Post', backref= 'comments')
+    # parent_comment_id = db.Column(db.Integer,\
+    #     db.ForeignKey('user_comment.comment_id'), nullable=True)
+    # commented_by_id = db.Column(db.Integer,\
+    #     db.ForeignKey('user_account.user_account_id'), nullable=True)
+    # commented_by = db.relationship('User_account', backref='comments')
         
