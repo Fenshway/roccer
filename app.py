@@ -2,7 +2,7 @@ from flask import Flask, render_template, request, redirect, flash, session
 from werkzeug.utils import secure_filename
 import os
 from dotenv import load_dotenv
-from src.models import db, User_account, Post
+from src.models import db, User_account, User_comment, Post
 from flask_bcrypt import Bcrypt
 from src.repositories.user_account_repository import user_repository_singleton
 from src.repositories.post_repository import post_repository_singleton
@@ -72,10 +72,32 @@ def settings():
   return render_template('settings.html')
 
 
-@app.get('/post')
+@app.route('/post', methods=['POST', 'GET'])
 def post():
-    return render_template('post.html')
+    if request.method == 'POST':
+        postID = request.form.get("post")
+        vote = request.form.get("vote")
+        ##TODO update vote status on server
+        print(postID, vote)
+    all_posts = post_repository_singleton.get_all_posts()
+    text = request.form.get('text')
+    return render_template('post.html', posts = all_posts, text=text)
 
+# @app.route("/reply-comment/<parent_post_id>", methods=['POST'])
+# ## TODO: Login needs to be required to comment
+# def create_comment(parent_post_id):
+#     text = request.form.get('text')
+#     if not text:
+#         flash('Empty Comment. Try again.', category='error')
+#     else: 
+#         post = Post.query.filter_by(post_id = parent_post_id)
+#         if post:
+#             comment = User_comment(comment_text=text, parent_post_id=parent_post_id)
+#             db.session.add(comment)
+#             db.session.commit()
+#         else:
+#             flash('Post does not exist.', category='error')
+#     return redirect('/post')
 
 @app.get('/create_post')
 def get_create_post():
@@ -197,7 +219,6 @@ def login():
     }
 
     flash('I will delete this message soon. You are logged in.')
-
     return redirect('/')
 
 @app.post('/logout')

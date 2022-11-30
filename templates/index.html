@@ -97,10 +97,19 @@
     height: 350px;
   }
 
-  .stored_vid video {
-    width: 100%;
-    height: 350px;
+  .light {
+  color: gray;
   }
+
+  .post-title{
+   color: black;
+  }
+
+  .stored_vid video {
+   width: 100%;
+   height: 350px;
+  }
+
 </style>
 {% endblock %}
 {% block body %}
@@ -173,6 +182,7 @@
 </script>
 {% if posts == [] %}
 <h2 class="text-center">Nothing to see here. Create a post by selecting the 'create post' button</h2>
+
 {% endif %}
 {% if posts != {} %}
 <div class="background">
@@ -191,6 +201,7 @@
         </div>
         <div>
           <p class="light">Posted by u/{{post.posted_by.username}} {{post.get_time_text()}}</p>
+           <a class="post-title" href="/post"><h3>{{post.title}}</h3></a> 
           <h3>{{post.title}}</h3>
         </div>
       </div>
