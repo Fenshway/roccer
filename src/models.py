@@ -98,10 +98,10 @@ class User_comment(db.Model):
 
     parent_post_id = db.Column(db.Integer,\
         db.ForeignKey('post.post_id'), nullable=True)
-    parent_post = db.relationship('Post', backref= 'comments')
+    # parent_post = db.relationship('Post', backref= 'comments')
     parent_comment_id = db.Column(db.Integer,\
         db.ForeignKey('user_comment.comment_id'), nullable=True)
     commented_by_id = db.Column(db.Integer,\
         db.ForeignKey('user_account.user_account_id'), nullable=True)
-    commented_by = db.relationship('User_account', backref='comments')
+    # commented_by = db.relationship('User_account', backref='comments')
         
