@@ -233,7 +233,7 @@ def delete():
     db.session.delete(user_to_delete)
     db.session.commit()
     return render_template('index.html')
-   user_to_delete = User_account.query.filter_by()
+    user_to_delete = User_account.query.filter_by()
 
 @app.post('/search')
 def search():
