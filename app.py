@@ -134,6 +134,18 @@ def create_post():
     elif title and url:
         post_repository_singleton.create_post_embedded_video(title, embed_video, session['user']['user_account_id'])
     elif title and video:
+        if 'video' not in request.files:
+            return redirect('/create_post')
+
+        if video.filename == '':
+            return redirect('/create_post')
+    
+        if video.filename.rsplit('.', 1)[1].lower() not in ['mp4', 'ogg', 'webm']:
+            return redirect('/create_post')
+        
+        safe_image_file = secure_filename(image.filename)
+        image.save(os.path.join('static/assets', 'post_images', safe_image_file))
+
         safe_video_file = secure_filename(video.filename)
         video.save(os.path.join('static/assets', 'post_videos', safe_video_file))
         
