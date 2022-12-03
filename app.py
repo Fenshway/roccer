@@ -187,8 +187,17 @@ def register():
 
     profile_picture.save(os.path.join('static/assets', 'profile-pics', safe_filename))
 
-    new_user = user_repository_singleton.create_user(first_name, last_name, username, hashed_password, safe_filename)
+    user_repository_singleton.create_user(first_name, last_name, username, hashed_password, safe_filename)
+    existing_user = User_account.query.filter_by(username=username).first()
     flash('Account created successfully.')
+    session['user'] = {
+        'user_account_id': existing_user.user_account_id,
+        'first_name': existing_user.first_name,
+        'last_name': existing_user.last_name,
+        'username': existing_user.username,
+        'user_account_id': existing_user.user_account_id,
+        'profile_path': existing_user.profile_path,
+    }
     return redirect('/profile')
 
 @app.get('/login_page')
