@@ -101,6 +101,8 @@ def post():
 
 @app.get('/create_post')
 def get_create_post():
+    if 'user' not in session:
+        return redirect('/')
     return render_template('create_post.html')
 
 @app.post('/create_post')
