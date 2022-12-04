@@ -102,7 +102,8 @@ def post():
 @app.get('/create_post')
 def get_create_post():
     if 'user' not in session:
-        return redirect('/')
+        return redirect('/login_page')
+
     return render_template('create_post.html')
 
 @app.post('/create_post')
@@ -169,7 +170,6 @@ def register_form():
 def register():
     first_name = request.form.get('firstname')
     last_name = request.form.get('lastname')
-    email = request.form.get('email')
     username = request.form.get('username')
     password = request.form.get('password')
     password2 = request.form.get('password2')
@@ -246,6 +246,9 @@ def login():
 
 @app.post('/logout')
 def logout():
+    if 'user' not in session:
+        return redirect('/')
+
     session.pop('user')
     return redirect('/')
 
