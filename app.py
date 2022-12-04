@@ -135,6 +135,18 @@ def create_post():
     elif title and url:
         post_repository_singleton.create_post_embedded_video(title, embed_video, session['user']['user_account_id'])
     elif title and video:
+        if 'video' not in request.files:
+            return redirect('/create_post')
+
+        if video.filename == '':
+            return redirect('/create_post')
+    
+        if video.filename.rsplit('.', 1)[1].lower() not in ['mp4', 'ogg', 'webm']:
+            return redirect('/create_post')
+        
+        safe_image_file = secure_filename(image.filename)
+        image.save(os.path.join('static/assets', 'post_images', safe_image_file))
+
         safe_video_file = secure_filename(video.filename)
         video.save(os.path.join('static/assets', 'post_videos', safe_video_file))
         
@@ -189,8 +201,17 @@ def register():
 
     profile_picture.save(os.path.join('static/assets', 'profile-pics', safe_filename))
 
-    new_user = user_repository_singleton.create_user(first_name, last_name, username, hashed_password, safe_filename)
+    user_repository_singleton.create_user(first_name, last_name, username, hashed_password, safe_filename)
+    existing_user = User_account.query.filter_by(username=username).first()
     flash('Account created successfully.')
+    session['user'] = {
+        'user_account_id': existing_user.user_account_id,
+        'first_name': existing_user.first_name,
+        'last_name': existing_user.last_name,
+        'username': existing_user.username,
+        'user_account_id': existing_user.user_account_id,
+        'profile_path': existing_user.profile_path,
+    }
     return redirect('/profile')
 
 @app.get('/login_page')

@@ -13,3 +13,5 @@ static/assets/post_images/*.jpeg
 static/assets/post_images/*.png
 static/assets/post_images/*.gif
 static/assets/post_videos/*.mp4
+static/assets/post_videos/*.ogg
+static/assets/post_videos/*.webm

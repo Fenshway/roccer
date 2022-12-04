@@ -98,18 +98,17 @@
   }
 
   .light {
-  color: gray;
+    color: gray;
   }
 
-  .post-title{
-   color: black;
+  .post-title {
+    color: black;
   }
 
   .stored_vid video {
-   width: 100%;
-   height: 350px;
+    width: 100%;
+    height: 350px;
   }
-
 </style>
 {% endblock %}
 {% block body %}
@@ -200,9 +199,10 @@
               src="static/assets/downvote-unselected.png"></button>
         </div>
         <div>
-          <p class="light">Posted by u/{{post.posted_by.username}} {{post.get_time_text()}}</p>
-           <a class="post-title" href="/post"><h3>{{post.title}}</h3></a> 
-          <h3>{{post.title}}</h3>
+          <p class="light mb-1">Posted by u/{{post.posted_by.username}} {{post.get_time_text()}}</p>
+          <a class="post-title" href="/post">
+            <h3>{{post.title}}</h3>
+          </a>
         </div>
       </div>
       <div class="content-container">
