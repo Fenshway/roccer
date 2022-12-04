@@ -12,40 +12,38 @@
 </div>
 {% endfor %}
 
-<h1>Create your account</h1>
-
-<form action="/register" method="post" enctype="multipart/form-data">
-  <div class="form-row">
-    <div class="form-group col-md-6">
+<div class="container" style="max-width: 600px;">
+  <h1>Create your account</h1>
+  <!--TODO: REDESIGN-->
+  <form action="/register" method="post" enctype="multipart/form-data">
+    <div class="form-group pt-2">
       <label for="firstname">First Name</label>
       <input type="text" class="form-control" name="firstname" id="firstname" placeholder="Enter First name">
     </div>
-    <div class="form-group col-md-6">
+    <div class="form-group pt-2">
       <label for="lastname">Last Name</label>
       <input type="text" class="form-control" name="lastname" id="lastname" placeholder="Enter Last name">
     </div>
-  </div>
-  <div class="form-group">
-    <label for="email">Email</label>
-    <input type="email" class="form-control" name="email" id="email" placeholder="Enter Email">
-  </div>
-  <div class="form-group">
-    <label for="username">Username</label>
-    <input type="username" class="form-control" name="username" id="username" placeholder="Enter Username">
-  </div>
-  <div class="form-group">
-    <label for="password">Password</label>
-    <input type="password" class="form-control" name="password" id="password" placeholder="Enter Password">
-  </div>
-  <div class="form-group">
-    <label for="password2">Reenter Password</label>
-    <input type="password" class="form-control" name="password2" id="password2" placeholder="Reenter Password">
-  </div>
+    <div class="form-group pt-2">
+      <label for="username">Username</label>
+      <input type="username" class="form-control" name="username" id="username" placeholder="Enter Username">
+    </div>
+    <div class="form-group pt-2">
+      <label for="password">Password</label>
+      <input type="password" class="form-control" name="password" id="password" placeholder="Enter Password">
+    </div>
+    <div class="form-group pt-2">
+      <label for="password2">Reenter Password</label>
+      <input type="password" class="form-control" name="password2" id="password2" placeholder="Reenter Password">
+    </div>
 
-  <div class="form-group">
-    <label for="profile">Profile Picture</label>
-    <input type="file" name="profile" class="form-control">
-  </div>
-  <button type="submit" class="btn btn-primary">Create</button>
-</form>
+    <div class="form-group pt-2">
+      <label for="profile">Profile Picture</label>
+      <input type="file" name="profile" class="form-control">
+    </div>
+    <div class="pt-2">
+      <button type="submit" class="btn btn-primary">Create Account</button>
+    </div>
+  </form>
+</div>
 {% endblock %}
