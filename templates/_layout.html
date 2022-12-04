@@ -34,36 +34,39 @@
         <button type="submit" class="btn btn-light">Search</button>
       </form>
 
-      <ul class="navbar-nav d-flex">
-        <li class="nav-item dropdown ms-auto">
-          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown"
-            aria-haspopup="true" aria-expanded="false">Profile</a>
-          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-            <a class="dropdown-item" href="/">Home</a>
-            <a class="dropdown-item" href="#">Search</a>
-            <a class="dropdown-item" href="/profile">Profile</a>
-            <a class="dropdown-item" href="/profile/settings">Settings</a>
-            <a class="dropdown-item" href="/register_form">Temp register</a>
-            <a class="dropdown-item" href="/login_page">Temp login</a>
-            <div class="dropdown-divider"></div>
-            <form action="/logout" method="post">
-              <button type="submit" class="btn btn-primary">Logout</button>
-            </form>
-          </div>
-        </li>
-      </ul>
 
-      <a href="/create_post">
-        <button type="button" class="btn btn-light px-3 ml-3">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-circle"
-            viewBox="0 0 16 16">
-            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
-            <path
-              d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z" />
-          </svg>
-          Create Post
-        </button>
-      </a>
+
+        <ul class="navbar-nav d-flex">
+        {% if username %}
+          <li class="nav-item dropdown ms-auto">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown"
+              aria-haspopup="true" aria-expanded="false">{{username}}</a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <a class="dropdown-item" href="/">Home</a>
+              <a class="dropdown-item" href="#">Search</a>
+              <a class="dropdown-item" href="/profile">Profile</a>
+              <a class="dropdown-item" href="/profile/settings">Settings</a>
+              <div class="dropdown-divider"></div>
+              <form action="/logout" method="post">
+                <button type="submit" class="btn btn-link">Logout</button>
+              </form>
+            </div>
+          </li>
+        </ul>
+        <a href="/create_post">
+          <button type="button" class="btn btn-light px-3 ml-3">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-circle"
+              viewBox="0 0 16 16">
+              <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+              <path
+                d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z" />
+            </svg>
+            Create Post
+          </button>
+        </a>
+      {% else %}
+        <a class="nav-link text-light" href="/login_page">Login</a>
+      {% endif %}
     </div>
   </nav>
 

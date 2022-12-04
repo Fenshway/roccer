@@ -27,6 +27,14 @@ def index():
         ##TODO update vote status on server
         print(postID, vote)
     all_posts = post_repository_singleton.get_all_posts()
+
+    #user in session
+    if 'user' in session:
+        username=session['user']['username']
+        return render_template('index.html', posts = all_posts, username=username)
+
+    #
+    #    
     return render_template('index.html', posts = all_posts)
 
 
@@ -69,7 +77,10 @@ def update_profile_pic():
 
 @app.get('/profile/settings')
 def settings():
-  return render_template('settings.html')
+    if 'user' in session:
+        username=session['user']['username']
+        return render_template('settings.html', username=username)
+    return render_template('settings.html')
 
 
 @app.route('/post', methods=['POST', 'GET'])
@@ -104,7 +115,8 @@ def get_create_post():
     if 'user' not in session:
         return redirect('/login_page')
 
-    return render_template('create_post.html')
+    username=session['user']['username']
+    return render_template('create_post.html', username=username)
 
 @app.post('/create_post')
 def create_post():
@@ -176,7 +188,7 @@ def register():
 
     if (password != password2):
         flash('Passwords do not match. Please try again.')
-        return render_template('/register_form')
+        return redirect('/register_form')
 
     existing_user = User_account.query.filter_by(username=username).first()
     if existing_user:
@@ -187,15 +199,18 @@ def register():
     hashed_password = hashed_bytes.decode('utf-8')
 
     if 'profile' not in request.files:
-        return redirect('/profile')
+        flash('Error processing file. Please try again')
+        return redirect('/register_form')
 
     profile_picture = request.files['profile']
 
     if profile_picture.filename == '':
-        return redirect('/profile')
+        flash('Error processing file. Please try again')
+        return redirect('/register_form')
     
     if profile_picture.filename.rsplit('.', 1)[1].lower() not in ['jpg', 'jpeg', 'gif', 'png']:
-        return redirect('/profile')
+        flash('Please use one of the approved file formats (jpg, jpeg, gif, png)')
+        return redirect('/register_form')
 
     safe_filename = secure_filename(f'{username}-{profile_picture.filename}')
 
@@ -240,8 +255,6 @@ def login():
         'user_account_id': existing_user.user_account_id,
         'profile_path': existing_user.profile_path,
     }
-
-    flash('I will delete this message soon. You are logged in.')
     return redirect('/')
 
 @app.post('/logout')
