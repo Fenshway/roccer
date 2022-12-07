@@ -40,6 +40,7 @@
 
     .containerr .card .top-card textarea {
         background-color: #1a1a1b;
+        border: 1px solid #343536;
         color: white;
         display: block;
         width: 100%;
@@ -66,7 +67,7 @@
 
     .containerr .card .bottom-card {
         display: flex;
-        justify-content: space-between;
+        justify-content: end;
         margin-bottom: 10px;
     }
 
@@ -91,38 +92,341 @@
     .url-label {
         color: white;
     }
+
+    .tab {
+        width: 100%;
+        overflow: hidden;
+        border: 1px solid #343536;
+        background-color: #1a1a1b;
+        display: flex;
+    }
+
+    /* Style the buttons that are used to open the tab content */
+    .tab button {
+        background-color: inherit;
+        float: left;
+        border: none;
+        border-right: 1px solid #343536;
+        outline: none;
+        cursor: pointer;
+        padding: 14px 16px;
+        transition: 0.3s;
+        color: #818384;
+        width: 25%;
+    }
+
+    /* Change background color of buttons on hover */
+    .tab button:hover {
+        background-color: rgb(221, 221, 221);
+    }
+
+    /* Create an active/current tablink class */
+    .tab button.active {
+        background-color: #ccc;
+    }
+
+    /* Style the tab content */
+    .tabcontent {
+        display: none;
+        padding: 6px 12px;
+        border: 1px solid #343536;
+        border-top: none;
+    }
+
+    .tabcontent div:nth-child(2) {
+        border: 1px solid #343536;
+        height: 400px;
+    }
+
+    svg {
+        margin-right: 5px;
+    }
+
+    .file-label {
+        padding: 15px 20px;
+        border: 1px solid white;
+        border-radius: 9999px;
+        color: white;
+        transition: 0.4s;
+    }
+
+    .file-label:hover {
+        cursor: pointer;
+        background-color: white;
+        color: black;
+    }
+
+    .file-input {
+        display: none;
+    }
+
+    .img-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .img-area {
+        color: white;
+        position: relative;
+        width: 500px;
+        height: 300px;
+        border: 5px solid grey;
+        border-radius: 10px;
+        overflow: hidden;
+        background-color: grey;
+    }
+
+    .img-area img {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center;
+        z-index: 100;
+    }
+
+    .img-area::before {
+        content: attr(data-img);
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        pointer-events: none;
+        opacity: 0;
+        z-index: 200;
+    }
+
+    .img-area.active:hover::before {
+        opacity: 1;
+    }
+
+    .test {
+        color: white;
+    }
+
+    .video-area {
+        color: white;
+        position: relative;
+        width: 500px;
+        height: 300px;
+        border: 5px solid grey;
+        border-radius: 10px;
+        overflow: hidden;
+        background-color: grey;
+    }
+
+    .video-area video {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center;
+        z-index: 100;
+    }
 </style>
 {% endblock %}
 
 {% block body %}
-<form action="/create_post" method="post" enctype="multipart/form-data">
-    <div class="containerr">
-        <h1>Create a post</h1>
-        <div class="card">
-            <div class="top-card">
-                <textarea name="title" cols="30" rows="1" placeholder="Title"></textarea>
-                <textarea name="text" cols="30" rows="10" placeholder="Enter text"></textarea>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js">
+</script>
+<div class="containerr">
+    <h1>Create a post</h1>
+    <div class="card">
+        <!---- TAB LINKS ---->
+        <section class="tab">
+
+            <!----Text---->
+            <button class="tablinks active" onclick="openPostType(event, 'text')"><svg
+                    xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                    class="bi bi-card-text" viewBox="0 0 16 16">
+                    <path
+                        d="M14.5 3a.5.5 0 0 1 .5.5v9a.5.5 0 0 1-.5.5h-13a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h13zm-13-1A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h13a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2h-13z" />
+                    <path
+                        d="M3 5.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zM3 8a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9A.5.5 0 0 1 3 8zm0 2.5a.5.5 0 0 1 .5-.5h6a.5.5 0 0 1 0 1h-6a.5.5 0 0 1-.5-.5z" />
+                </svg> Text</button>
+
+            <!----Image---->
+            <button class="tablinks" onclick="openPostType(event, 'image')"><svg xmlns="http://www.w3.org/2000/svg"
+                    width="16" height="16" fill="currentColor" class="bi bi-card-image" viewBox="0 0 16 16">
+                    <path d="M6.002 5.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z" />
+                    <path
+                        d="M1.5 2A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h13a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2h-13zm13 1a.5.5 0 0 1 .5.5v6l-3.775-1.947a.5.5 0 0 0-.577.093l-3.71 3.71-2.66-1.772a.5.5 0 0 0-.63.062L1.002 12v.54A.505.505 0 0 1 1 12.5v-9a.5.5 0 0 1 .5-.5h13z" />
+                </svg> Image</button>
+
+            <!----Video---->
+            <button class="tablinks" onclick="openPostType(event, 'video')"><svg xmlns="http://www.w3.org/2000/svg"
+                    width="16" height="16" fill="currentColor" class="bi bi-film" viewBox="0 0 16 16">
+                    <path
+                        d="M0 1a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H1a1 1 0 0 1-1-1V1zm4 0v6h8V1H4zm8 8H4v6h8V9zM1 1v2h2V1H1zm2 3H1v2h2V4zM1 7v2h2V7H1zm2 3H1v2h2v-2zm-2 3v2h2v-2H1zM15 1h-2v2h2V1zm-2 3v2h2V4h-2zm2 3h-2v2h2V7zm-2 3v2h2v-2h-2zm2 3h-2v2h2v-2z" />
+                </svg> Video</button>
+
+            <!----Link---->
+            <button class="tablinks" onclick="openPostType(event, 'link')"><svg xmlns="http://www.w3.org/2000/svg"
+                    width="16" height="16" fill="currentColor" class="bi bi-link-45deg" viewBox="0 0 16 16">
+                    <path
+                        d="M4.715 6.542 3.343 7.914a3 3 0 1 0 4.243 4.243l1.828-1.829A3 3 0 0 0 8.586 5.5L8 6.086a1.002 1.002 0 0 0-.154.199 2 2 0 0 1 .861 3.337L6.88 11.45a2 2 0 1 1-2.83-2.83l.793-.792a4.018 4.018 0 0 1-.128-1.287z" />
+                    <path
+                        d="M6.586 4.672A3 3 0 0 0 7.414 9.5l.775-.776a2 2 0 0 1-.896-3.346L9.12 3.55a2 2 0 1 1 2.83 2.83l-.793.792c.112.42.155.855.128 1.287l1.372-1.372a3 3 0 1 0-4.243-4.243L6.586 4.672z" />
+                </svg>Link</button>
+        </section>
+
+        <!---- TAB CONTENT ---->
+        <form action="/create_post" method="post" enctype="multipart/form-data">
+            <!----Text---->
+            <div id="text" class="tabcontent" style="display:block">
+                <section class="top-card">
+                    <textarea name="title" cols="30" rows="1" placeholder="Title"></textarea>
+                    <textarea name="text" cols="30" rows="10" placeholder="Enter text"></textarea>
+                </section>
+
+                <section class="bottom-card">
+                    <div>
+                        <button type="submit" class="post-btn">Post</button>
+                    </div>
+                </section>
             </div>
+        </form>
 
-            <div class="bottom-card">
-                <div>
-                    <label class="file-label">
-                        <i class="fa fa-image"></i> Image <input class="file-input" type="file" name="image">
-                    </label>
+        <!----Image---->
+        <form action="/create_post" method="post" enctype="multipart/form-data">
+            <div id="image" class="tabcontent">
+                <section class="top-card">
+                    <textarea name="title" cols="30" rows="1" placeholder="Title"></textarea>
+                    <div class="img-container" id="">
+                        <div class="img-area" id="preview">
 
-                    <label class="file-label">
-                        <i class="fa fa-image"></i> Video <input class="file-input" type="file" name="video">
-                    </label>
+                        </div>
+                        <label class="file-label" id="">
+                            <i class="fa fa-image" id=""></i> Upload Image <input class="file-input" type="file"
+                                name="image" id="file">
+                        </label>
+                    </div>
+                </section>
 
-                    <label class="url-label" for="">URL:</label>
-                    <input type="text" name="url">
-                </div>
-
-                <div>
-                    <button type="submit" class="post-btn">Post</button>
-                </div>
+                <section class="bottom-card">
+                    <div>
+                        <button type="submit" class="post-btn">Post</button>
+                    </div>
+                </section>
             </div>
-        </div>
+        </form>
+
+        <!----Video---->
+        <form action="/create_post" method="post" enctype="multipart/form-data">
+            <div id="video" class="tabcontent">
+                <section class="top-card">
+                    <textarea name="title" cols="30" rows="1" placeholder="Title"></textarea>
+                    <div class="img-container">
+                        <div class="video-area" id="video-area">
+                            <video id="video-element" controls>
+                                Your browser does not support the video tag
+                            </video>
+                        </div>
+                        <label class="file-label" id="video-label">
+                            <i class="fa fa-image" id=""></i> Upload Video <input class="file-input video-input"
+                                type="file" name="video" id="video-file">
+                        </label>
+                    </div>
+                </section>
+
+                <section class="bottom-card">
+                    <div>
+                        <button type="submit" class="post-btn">Post</button>
+                    </div>
+                </section>
+            </div>
+        </form>
+
+        <!----Link---->
+        <form action="/create_post" method="post" enctype="multipart/form-data">
+            <div id="link" class="tabcontent">
+                <section class="top-card">
+                    <textarea name="title" cols="30" rows="1" placeholder="Title"></textarea>
+                    <textarea name="link" cols="30" rows="3" placeholder="Url"></textarea>
+                </section>
+
+                <section class="bottom-card">
+                    <div>
+                        <button type="submit" class="post-btn">Post</button>
+                    </div>
+                </section>
+            </div>
+        </form>
+
     </div>
-</form>
+</div>
+
+
+<script>
+    function openPostType(evt, postType) {
+        // Declare all variables
+        var i, tabcontent, tablinks;
+
+        // Get all elements with class="tabcontent" and hide them
+        tabcontent = document.getElementsByClassName("tabcontent");
+        for (i = 0; i < tabcontent.length; i++) {
+            tabcontent[i].style.display = "none";
+        }
+
+        // Get all elements with class="tablinks" and remove the class "active"
+        tablinks = document.getElementsByClassName("tablinks");
+        for (i = 0; i < tablinks.length; i++) {
+            tablinks[i].className = tablinks[i].className.replace(" active", "");
+        }
+
+        // Show the current tab, and add an "active" class to the button that opened the tab
+        document.getElementById(postType).style.display = "block";
+        evt.currentTarget.className += " active";
+    }
+
+    window.onload = function () {
+        document.querySelector('#preview').style.display = 'none'
+        document.querySelector('#video-area').style.display = 'none'
+        document.querySelector('#video-element').style.display = 'none'
+    }
+    //Uploading images
+    const selectImage = document.querySelector('.file-input');
+    const inputFile = document.querySelector('#file');
+    const imgArea = document.querySelector('.img-area');
+
+    selectImage.addEventListener('click', function () {
+        inputFile.click();
+    })
+
+    inputFile.addEventListener('change', function () {
+        const image = this.files[0]
+        console.log(image);
+        const reader = new FileReader();
+        reader.onload = () => {
+            const imgUrl = reader.result;
+            const img = document.createElement('img');
+            img.src = imgUrl;
+            imgArea.appendChild(img);
+            imgArea.classList.add('active');
+        }
+        reader.readAsDataURL(image);
+        document.querySelector('.file-label').style.display = 'none'
+        document.querySelector('#preview').style.display = 'block'
+    })
+
+    //Uploading videos
+    document.getElementById("video-file")
+        .onchange = function (event) {
+            let file = event.target.files[0];
+            let blobURL = URL.createObjectURL(file);
+            document.querySelector("video").src = blobURL;
+            document.querySelector('#video-label').style.display = 'none'
+            document.querySelector('#video-area').style.display = 'block'
+            document.querySelector('video').style.display = 'block'
+        }
+</script>
 {% endblock %}
