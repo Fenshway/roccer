@@ -28,13 +28,10 @@ def index():
         print(postID, vote)
     all_posts = post_repository_singleton.get_all_posts()
 
-    #user in session
     if 'user' in session:
         username=session['user']['username']
         return render_template('index.html', posts = all_posts, username=username)
-
-    #
-    #    
+   
     return render_template('index.html', posts = all_posts)
 
 
@@ -168,11 +165,6 @@ def create_post():
 
     return redirect('/')
     
-    
-        
-    
-
-
 
 @app.get('/register_form')
 def register_form():
@@ -274,9 +266,14 @@ def delete():
     return render_template('index.html')
     user_to_delete = User_account.query.filter_by()
 
-@app.post('/search')
+@app.get('/search')
 def search():
-    topic = request.form.get('topic')
+    topic = request.args.get('topic')
     searched_posts = post_repository_singleton.search_post(topic)
+
+    if 'user' in session:
+        username=session['user']['username']
+        return render_template('index.html', posts = searched_posts, username=username)
+    
     return render_template('index.html', posts = searched_posts)
 

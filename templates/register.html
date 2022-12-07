@@ -18,28 +18,28 @@
   <form action="/register" method="post" enctype="multipart/form-data">
     <div class="form-group pt-2">
       <label for="firstname">First Name</label>
-      <input type="text" class="form-control" name="firstname" id="firstname" placeholder="Enter First name">
+      <input type="text" class="form-control" name="firstname" id="firstname" placeholder="Enter First name" required>
     </div>
     <div class="form-group pt-2">
       <label for="lastname">Last Name</label>
-      <input type="text" class="form-control" name="lastname" id="lastname" placeholder="Enter Last name">
+      <input type="text" class="form-control" name="lastname" id="lastname" placeholder="Enter Last name" required>
     </div>
     <div class="form-group pt-2">
       <label for="username">Username</label>
-      <input type="username" class="form-control" name="username" id="username" placeholder="Enter Username">
+      <input type="username" class="form-control" name="username" id="username" placeholder="Enter Username" required>
     </div>
     <div class="form-group pt-2">
       <label for="password">Password</label>
-      <input type="password" class="form-control" name="password" id="password" placeholder="Enter Password">
+      <input type="password" class="form-control" name="password" id="password" placeholder="Enter Password" required>
     </div>
     <div class="form-group pt-2">
       <label for="password2">Reenter Password</label>
-      <input type="password" class="form-control" name="password2" id="password2" placeholder="Reenter Password">
+      <input type="password" class="form-control" name="password2" id="password2" placeholder="Reenter Password" required>
     </div>
 
     <div class="form-group pt-2">
       <label for="profile">Profile Picture</label>
-      <input type="file" name="profile" class="form-control">
+      <input type="file" name="profile" class="form-control" required>
     </div>
     <div class="pt-2">
       <button type="submit" class="btn btn-primary">Create Account</button>
