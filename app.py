@@ -265,11 +265,11 @@ def logout():
 
 @app.post('/delete')
 def delete():
-    user_to_delete = User_account.query.filter_by('username')
+    user_to_delete = User_account.query.get(session['user']['user_account_id'])
     db.session.delete(user_to_delete)
     db.session.commit()
     return render_template('index.html')
-    user_to_delete = User_account.query.filter_by()
+    #user_to_delete = User_account.query.filter_by()
 
 @app.get('/search')
 def search():
