@@ -4,74 +4,103 @@
 
 {% block body %}
 
-<div class="row gutters-sm">
-    <div class="col-md-4 mb-3">
-      <div class="card">
-        <div class="card-body">
-          <div class="d-flex flex-column align-items-center text-center">
-            <img src="https://img.icons8.com/bubbles/100/000000/user.png" alt="Admin" class="rounded-circle" width="150">
-            <div class="mt-3">
-              <h4>Yuanjie</h4>
-              <p class="text-secondary mb-1">Student at UNCC</p>
-              <p class="text-muted font-size-sm">Charlotte,NC</p>
-              <button class="btn btn-primary">Edit</button>
-            </div>
-          </div>
-        </div>
-      </div>
+{% block style%}
+<style>
+  body {
+    background-color:   #DBE0E5;
+  }
+  .profile-image {
+    position: relative;
+  }
 
-    </div>
-    <div class="col-md-8">
-      <div class="card mb-3">
-        <div class="card-body">
-          <div class="row">
-            <div class="col-sm-3">
-              <h6 class="mb-0">Full Nam`e</h6>
-            </div>
-            <div class="col-sm-9 text-secondary">
-              First M. Last
-            </div>
-          </div>
-          <hr>
-          <div class="row">
-            <div class="col-sm-3">
-              <h6 class="mb-0">Email</h6>
-            </div>
-            <div class="col-sm-9 text-secondary">
-              123@gmail.com
-            </div>
-          </div>
-          <hr>
-          <div class="row">
-            <div class="col-sm-3">
-              <h6 class="mb-0">Change Paassword - Must be at least 8 characters long</h6>
-            </div>
-            <div class="col-sm-9 text-secondary">
-              ********
-            </div>
-</div>
-          <hr>
-          <div class="row">
-            <div class="col-sm-3">
-              <h6 class="mb-0">Language Settings</h6>
-              
-            </div>
-            <div class="col-sm-9 text-secondary">
-              English
-            </div>
-          </div>
-          <hr>
-          <div class="row">
-            <div class="col-sm-12">
-              <a class="btn btn-info " target="__blank" >Change Settings</a>
-            </div>
-          </div>
-          <hr>
-          <div class="row">
-            <div class="col-sm-12">
-              <a class="btn btn-info " target="__blank" >Delete Account</a>
-            </div>
+  .profile-image img {
+    border-radius: 50%;
+    object-fit: cover;
+    height: 125px;
+    width: 125px;
+  }
+
+  .profile-image div {
+    position: absolute;
+    top: 0;
+    background-color: hsl(0, 100%, 0%, 60%);
+    width: 100%;
+    height: 100%;
+    z-index: 999;
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+    border-radius: 50%;
+  }
+</style> 
+{% endblock %}
+
+
+
+
+<div class="col-md-8" style="width: 600px; margin: auto;">
+  <div class="card mb-3 mt-4">
+    <div class="card-body">
+      <div class="row">
+        <div class="col">
+          <h1 class="mb-4">Account Settings</h1>
+        </div>
+        <div class="col">
+          <div class="profile-image">
+            <label for="profile">
+              <img src="/static/assets/profile-pics/{{ profile_path }}" alt="Admin" class="icon justify-center">
+              <!-- <img src="https://img.icons8.com/bubbles/100/000000/user.png" alt="Admin" class="icon" width="125"> -->
+            </label>
           </div>
         </div>
       </div>
+      <hr>
+      <div class="row">
+        <div class="col">
+          <h6 class="mb-0">Username</h6>
+        </div>
+        <div class="col">
+          {{username}}
+        </div>
+      </div>
+      <hr>
+      <div class="row">
+        <div class="col">
+          <h6 class="mb-0">Full name</h6>
+        </div>
+        <div class="col text-secondary">
+          {{first_name}} {{last_name}}
+        </div>
+      </div>
+      <hr>
+      <div class="row">
+        <div class="col">
+          <h6 class="mb-0">Password</h6>
+        </div>
+        <div class="col text-secondary">
+          ********
+        </div>
+      </div>
+      <hr>
+      <div class="row">
+        <div class="col">
+          <h6 class="mb-0">Language Settings</h6>
+          
+        </div>
+        <div class="col text-secondary">
+          English
+        </div>
+      </div>
+      <hr>
+      <div class="row">
+        <div class="col">
+          <a class="btn btn-info" href="/update_user_form" >Update Settings</a>
+        </div>
+        <div class="col">
+          <form action="/delete" method="post"><button class="btn btn-danger" type="submit">Delete Account</button></form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
 {% endblock %}

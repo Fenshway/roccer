@@ -1,5 +1,5 @@
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import func
+from sqlalchemy import func, update
 db = SQLAlchemy()
 from datetime import datetime
 

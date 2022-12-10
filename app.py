@@ -6,6 +6,7 @@ from src.models import db, User_account, User_comment, Post
 from flask_bcrypt import Bcrypt
 from src.repositories.user_account_repository import user_repository_singleton
 from src.repositories.post_repository import post_repository_singleton
+from sqlalchemy import update
 
 
 load_dotenv()
@@ -74,10 +75,15 @@ def update_profile_pic():
 
 @app.get('/profile/settings')
 def settings():
-    if 'user' in session:
-        username=session['user']['username']
-        return render_template('settings.html', username=username)
-    return render_template('settings.html')
+    if 'user' not in session:
+        return render_template('/')
+
+    first_name=session['user']['first_name']
+    last_name=session['user']['last_name']
+    username=session['user']['username']
+    profile_path=session['user']['profile_path']
+
+    return render_template('settings.html', first_name=first_name, last_name=last_name, username=username, profile_path=profile_path)
 
 
 @app.route('/post', methods=['POST', 'GET'])
@@ -276,4 +282,76 @@ def search():
         return render_template('index.html', posts = searched_posts, username=username)
     
     return render_template('index.html', posts = searched_posts)
+
+@app.get('/update_user_form')
+def update_user_form():
+
+    if 'user' not in session:
+        return redirect('/')
+    first_name=session['user']['first_name']
+    last_name=session['user']['last_name']
+    username=session['user']['username']
+    return render_template('update_user.html', first_name=first_name, last_name=last_name, username=username)
+
+@app.post('/update_user')
+def update_user():
+    if 'user' not in session:
+        return redirect('/login')
+
+    user_id=session['user']['user_account_id']
+    first_name=session['user']['first_name']
+    last_name=session['user']['last_name']
+    username=session['user']['username']
+    
+    password = request.form.get('password')
+
+    existing_user = User_account.query.filter_by(user_account_id=user_id).first()
+    if not bcrypt.check_password_hash(existing_user.user_password, password):
+        flash('Incorrect Password')
+        return redirect('/update_user_form')
+
+    new_username = request.form.get('username')
+    if username != new_username:
+        existing_user = User_account.query.filter_by(username=new_username).first()
+        if existing_user is not None:
+            flash('Username already taken.')
+            return redirect('/update_user_form')
+        user_repository_singleton.update_username(user_id, new_username)
+
+    new_first_name = request.form.get('firstname')
+    if first_name != new_first_name:
+        user_repository_singleton.update_user_first_name(user_id, new_first_name)
+
+    new_last_name = request.form.get('lastname')
+    if last_name != new_last_name:
+        user_repository_singleton.update_user_last_name(user_id, new_last_name)
+
+    new_pw1 = request.form.get('new_pw')
+    new_pw2 = request.form.get('new_pw2')
+
+    if new_pw1 is not '' and new_pw2 is not '':
+        if new_pw1 != new_pw2:
+            flash('New passwords do not match')
+            return redirect('/update_user_form')
+        else:
+            hashed_bytes = bcrypt.generate_password_hash(new_pw1, int(os.getenv('BCRYPT_ROUNDS')))
+            hashed_password = hashed_bytes.decode('utf-8')
+            user_repository_singleton.update_password(user_id, hashed_password)
+
+    session.pop('user')
+
+    existing_user = User_account.query.filter_by(user_account_id=user_id).first()
+    session['user'] = {
+        'user_account_id': existing_user.user_account_id,
+        'first_name': existing_user.first_name,
+        'last_name': existing_user.last_name,
+        'username': existing_user.username,
+        'user_account_id': existing_user.user_account_id,
+        'profile_path': existing_user.profile_path,
+    }
+    
+    return redirect('/profile/settings')
+
+
+
 
