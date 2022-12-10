@@ -125,17 +125,21 @@ def get_create_post():
 def create_post():
     title = request.form.get('title')
     text = request.form.get('text')
-    image = request.files['image']
-    video = request.files['video']
-    url = request.form.get('url')
-    embed_video = url.replace("watch?v=", "embed/")
+
+    # print(f'Title: {title}')
+    # print(f'Text: {text}')
+    # print(f'Image: {image}')
+    # print(f'Video: {video}')
+    # print(f'Link: {url}')
+    # print(f'Embed VIdeo: {embed_video}')
+
     
 
     if title and text:
         post_repository_singleton.create_post_text(title, text, session['user']['user_account_id'])
-    elif title and image:
-        if 'image' not in request.files:
-            return redirect('/create_post')
+
+    elif title and 'image' in request.files:
+        image = request.files['image']
 
         if image.filename == '':
             return redirect('/create_post')
@@ -147,20 +151,21 @@ def create_post():
         image.save(os.path.join('static/assets', 'post_images', safe_image_file))
 
         post_repository_singleton.create_post_stored_image(title, safe_image_file, session['user']['user_account_id'])
-    elif title and url:
+
+    elif title and request.form.get('link'):
+        url = request.form.get('link')
+        embed_video = url.replace("watch?v=", "embed/")
+
         post_repository_singleton.create_post_embedded_video(title, embed_video, session['user']['user_account_id'])
-    elif title and video:
-        if 'video' not in request.files:
-            return redirect('/create_post')
+
+    elif title and 'video' in request.files:
+        video = request.files['video']
 
         if video.filename == '':
             return redirect('/create_post')
     
         if video.filename.rsplit('.', 1)[1].lower() not in ['mp4', 'ogg', 'webm']:
             return redirect('/create_post')
-        
-        safe_image_file = secure_filename(image.filename)
-        image.save(os.path.join('static/assets', 'post_images', safe_image_file))
 
         safe_video_file = secure_filename(video.filename)
         video.save(os.path.join('static/assets', 'post_videos', safe_video_file))
@@ -266,11 +271,11 @@ def logout():
 
 @app.post('/delete')
 def delete():
-    user_to_delete = User_account.query.filter_by('username')
+    user_to_delete = User_account.query.get(session['user']['user_account_id'])
     db.session.delete(user_to_delete)
     db.session.commit()
     return render_template('index.html')
-    user_to_delete = User_account.query.filter_by()
+    #user_to_delete = User_account.query.filter_by()
 
 @app.get('/search')
 def search():
