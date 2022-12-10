@@ -1,0 +1,89 @@
+{% extends '_layout.html' %}
+
+{% block title %}Roccer | Update Information{% endblock %}
+
+{% block body %}
+
+{% block style%}
+<style>
+  body {
+    background-color:   #DBE0E5;
+  }
+  .profile-image {
+    position: relative;
+  }
+
+  .profile-image img {
+    border-radius: 50%;
+    object-fit: cover;
+    height: 125px;
+    width: 125px;
+  }
+
+  .profile-image div {
+    position: absolute;
+    top: 0;
+    background-color: hsl(0, 100%, 0%, 60%);
+    width: 100%;
+    height: 100%;
+    z-index: 999;
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+    border-radius: 50%;
+  }
+</style> 
+{% endblock %}
+
+<!--FLASH MESSAGES-->
+{% for message in get_flashed_messages() %}
+<div class="alert alert-warning alert-dismissible fade show" role="alert">
+  <strong>{{message}}</strong>
+  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+{% endfor %}
+
+<div class="col-md-8" style="width: 600px; margin: auto;">
+  <div class="card mb-3 mt-4">
+    <div class="card-body">
+      <h1>Update Account Information</h1>
+      <form action="/update_user" method="post">
+        <div class="form-group pt-2">
+          <label for="username">Username</label>
+          <input type="username" class="form-control" name="username" id="username" value="{{username}}" required>
+        </div>
+        
+        <div class="form-group pt-2">
+          <label for="firstname">First Name</label>
+          <input type="text" class="form-control" name="firstname" id="firstname"  value="{{first_name}}" required>
+        </div>
+
+        <div class="form-group pt-2">
+          <label for="lastname">Last Name</label>
+          <input type="text" class="form-control" name="lastname" id="lastname"  value="{{last_name}}" required>
+        </div>
+
+        <div class="form-group pt-2">
+          <label for="password">Current Password</label>
+          <input type="password" class="form-control" name="password" id="password" required>
+        </div>
+
+        <hr>
+        <h3>Leave Blank to Keep Current Password</h3>
+        <div class="form-group pt-2">
+          <label for="password2">New Password</label>
+          <input type="password" class="form-control" name="new_pw" id="new_pw">
+        </div>
+
+        <div class="form-group pt-2">
+          <label for="password2">Reenter New Password</label>
+          <input type="password" class="form-control" name="new_pw2" id="new_pw2">
+        </div>
+        <hr>
+        <div class="pt-2">
+          <button type="submit" class="btn btn-primary">Update</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}
