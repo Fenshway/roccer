@@ -10,7 +10,7 @@
     }
 
     body {
-        background-color: #030303;
+        background-color: #DBE0E5;
     }
 
     .containerr {
@@ -19,15 +19,15 @@
     }
 
     .containerr h1 {
-        color: #D7DADC;
+        color: black;
         font-size: 32px;
         margin-bottom: 30px;
-        border-bottom: 1px solid #D7DADC;
+        border-bottom: 1px solid white;
         padding-bottom: 20px;
     }
 
     .containerr .card {
-        background-color: #1a1a1b;
+        background-color: white;
     }
 
     .containerr .top-card {
@@ -39,9 +39,9 @@
     }
 
     .containerr .card .top-card textarea {
-        background-color: #1a1a1b;
-        border: 1px solid #343536;
-        color: white;
+        background-color: white;
+        border: 1px solid #DAE0E6;
+        color: black;
         display: block;
         width: 100%;
         border-radius: 4px;
@@ -61,6 +61,7 @@
     .post-btn {
         padding: 10px 30px;
         border: none;
+        background-color: rgb(221, 221, 221);
         border-radius: 9999px;
     }
 
@@ -85,10 +86,6 @@
         cursor: pointer;
     }
 
-    .url-input {
-        background-color: turquoise;
-    }
-
     .url-label {
         color: white;
     }
@@ -96,23 +93,26 @@
     .tab {
         width: 100%;
         overflow: hidden;
-        border: 1px solid #343536;
-        background-color: #1a1a1b;
+        border: 1px solid #DAE0E6;
         display: flex;
     }
 
     /* Style the buttons that are used to open the tab content */
     .tab button {
-        background-color: inherit;
+        background-color: white;
         float: left;
         border: none;
-        border-right: 1px solid #343536;
+        border-right: 1px solid #DAE0E6;
         outline: none;
         cursor: pointer;
         padding: 14px 16px;
         transition: 0.3s;
         color: #818384;
         width: 25%;
+    }
+
+    .tab button:nth-of-type(4) {
+        border: none;
     }
 
     /* Change background color of buttons on hover */
@@ -129,12 +129,10 @@
     .tabcontent {
         display: none;
         padding: 6px 12px;
-        border: 1px solid #343536;
         border-top: none;
     }
 
     .tabcontent div:nth-child(2) {
-        border: 1px solid #343536;
         height: 400px;
     }
 
@@ -144,15 +142,15 @@
 
     .file-label {
         padding: 15px 20px;
-        border: 1px solid white;
+        border: 1px solid #DAE0E6;
         border-radius: 9999px;
-        color: white;
+        color: black;
         transition: 0.4s;
     }
 
     .file-label:hover {
         cursor: pointer;
-        background-color: white;
+        background-color: rgb(221, 221, 221);
         color: black;
     }
 
@@ -164,6 +162,7 @@
         display: flex;
         justify-content: center;
         align-items: center;
+        border: 1px solid #DAE0E6;
     }
 
     .img-area {
@@ -174,7 +173,6 @@
         border: 5px solid grey;
         border-radius: 10px;
         overflow: hidden;
-        background-color: grey;
     }
 
     .img-area img {
@@ -212,14 +210,12 @@
     }
 
     .video-area {
-        color: white;
         position: relative;
         width: 500px;
         height: 300px;
         border: 5px solid grey;
         border-radius: 10px;
         overflow: hidden;
-        background-color: grey;
     }
 
     .video-area video {

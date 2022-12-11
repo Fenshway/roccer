@@ -1,5 +1,5 @@
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import func
+from sqlalchemy import func, update
 db = SQLAlchemy()
 from datetime import datetime
 
@@ -29,7 +29,6 @@ class User_account(db.Model):
     user_password = db.Column(db.String, nullable=False)
     profile_path = db.Column(db.String, nullable=False)
     created_at = db.Column(db.TIMESTAMP(timezone=False), nullable=False, server_default=func.now())
-    comments = db.relationship('User_comment', backref='User_account', passive_deletes=True)
 
     def __init__(self, first_name, last_name, username, password, profile_path):
         self.first_name = first_name
@@ -52,8 +51,6 @@ class Post(db.Model):
         
     posted_by = db.relationship('User_account', backref='posts')
     votes = db.relationship('User_account', secondary=post_vote, backref='votes')
-
-    comments = db.relationship('User_comment', backref='post ', passive_deletes=True)
 
     def __init__(self, title, post_type, embedded_video_link, stored_video_path, stored_image_path, post_text, posted_by_id):
         self.title = title
@@ -100,10 +97,10 @@ class User_comment(db.Model):
 
     parent_post_id = db.Column(db.Integer,\
         db.ForeignKey('post.post_id'), nullable=True)
-    # parent_post = db.relationship('Post', backref= 'comments')
+    parent_post = db.relationship('Post', backref= 'comments')
     parent_comment_id = db.Column(db.Integer,\
         db.ForeignKey('user_comment.comment_id'), nullable=True)
     commented_by_id = db.Column(db.Integer,\
-        db.ForeignKey('user_account.user_account_id'), nullable=True)
-    # commented_by = db.relationship('User_account', backref='comments')
+        db.ForeignKey('user_account.user_account_id'), nullable=False)
+    commented_by = db.relationship('User_account', backref='comments')
         

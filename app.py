@@ -6,6 +6,7 @@ from src.models import db, User_account, User_comment, Post
 from flask_bcrypt import Bcrypt
 from src.repositories.user_account_repository import user_repository_singleton
 from src.repositories.post_repository import post_repository_singleton
+from sqlalchemy import update
 
 
 load_dotenv()
@@ -74,10 +75,15 @@ def update_profile_pic():
 
 @app.get('/profile/settings')
 def settings():
-    if 'user' in session:
-        username=session['user']['username']
-        return render_template('settings.html', username=username)
-    return render_template('settings.html')
+    if 'user' not in session:
+        return render_template('/')
+
+    first_name=session['user']['first_name']
+    last_name=session['user']['last_name']
+    username=session['user']['username']
+    profile_path=session['user']['profile_path']
+
+    return render_template('settings.html', first_name=first_name, last_name=last_name, username=username, profile_path=profile_path)
 
 
 @app.route('/post', methods=['POST', 'GET'])
@@ -88,24 +94,27 @@ def post():
         ##TODO update vote status on server
         print(postID, vote)
     all_posts = post_repository_singleton.get_all_posts()
-    text = request.form.get('text')
-    return render_template('post.html', posts = all_posts, text=text)
+    return render_template('post.html', posts = all_posts)
 
-# @app.route("/reply-comment/<parent_post_id>", methods=['POST'])
-# ## TODO: Login needs to be required to comment
-# def create_comment(parent_post_id):
-#     text = request.form.get('text')
-#     if not text:
-#         flash('Empty Comment. Try again.', category='error')
-#     else: 
-#         post = Post.query.filter_by(post_id = parent_post_id)
-#         if post:
-#             comment = User_comment(comment_text=text, parent_post_id=parent_post_id)
-#             db.session.add(comment)
-#             db.session.commit()
-#         else:
-#             flash('Post does not exist.', category='error')
-#     return redirect('/post')
+@app.route("/reply-comment/<parent_post_id>", methods=['POST'])
+## TODO: Login needs to be required to comment
+def create_comment(parent_post_id):
+    text = request.form.get('text')
+    if not text:
+        flash('Empty Comment. Try again.', category='error')
+    else: 
+        post = Post.query.filter_by(post_id = parent_post_id)
+        if session.get('user') != None:
+            current_user_ID = int(session.get('user')['user_account_id'])
+            if post:
+                comment = User_comment(comment_text=text, parent_post_id=parent_post_id, commented_by_id = current_user_ID)
+                db.session.add(comment)
+                db.session.commit()
+            else:
+                flash('Post does not exist.', category='error')
+        else:
+            print('error no user logged in')
+    return redirect('/post')
 
 @app.get('/create_post')
 def get_create_post():
@@ -290,4 +299,80 @@ def search():
     
     return render_template('index.html', posts = searched_posts)
 
+@app.get('/update_user_form')
+def update_user_form():
+
+    if 'user' not in session:
+        return redirect('/')
+    first_name=session['user']['first_name']
+    last_name=session['user']['last_name']
+    username=session['user']['username']
+    return render_template('update_user.html', first_name=first_name, last_name=last_name, username=username)
+
+@app.post('/update_user')
+def update_user():
+    if 'user' not in session:
+        return redirect('/login')
+
+    user_id=session['user']['user_account_id']
+    first_name=session['user']['first_name']
+    last_name=session['user']['last_name']
+    username=session['user']['username']
+    
+    password = request.form.get('password')
+
+    existing_user = User_account.query.filter_by(user_account_id=user_id).first()
+    if not bcrypt.check_password_hash(existing_user.user_password, password):
+        flash('Incorrect Password')
+        return redirect('/update_user_form')
+
+    new_username = request.form.get('username')
+    if username != new_username:
+        existing_user = User_account.query.filter_by(username=new_username).first()
+        if existing_user is not None:
+            flash('Username already taken.')
+            return redirect('/update_user_form')
+        user_repository_singleton.update_username(user_id, new_username)
+
+    new_first_name = request.form.get('firstname')
+    if first_name != new_first_name:
+        user_repository_singleton.update_user_first_name(user_id, new_first_name)
+
+    new_last_name = request.form.get('lastname')
+    if last_name != new_last_name:
+        user_repository_singleton.update_user_last_name(user_id, new_last_name)
+
+    new_pw1 = request.form.get('new_pw')
+    new_pw2 = request.form.get('new_pw2')
+
+    if new_pw1 is not '' and new_pw2 is not '':
+        if new_pw1 != new_pw2:
+            flash('New passwords do not match')
+            return redirect('/update_user_form')
+        else:
+            hashed_bytes = bcrypt.generate_password_hash(new_pw1, int(os.getenv('BCRYPT_ROUNDS')))
+            hashed_password = hashed_bytes.decode('utf-8')
+            user_repository_singleton.update_password(user_id, hashed_password)
+
+    session.pop('user')
+
+    existing_user = User_account.query.filter_by(user_account_id=user_id).first()
+    session['user'] = {
+        'user_account_id': existing_user.user_account_id,
+        'first_name': existing_user.first_name,
+        'last_name': existing_user.last_name,
+        'username': existing_user.username,
+        'user_account_id': existing_user.user_account_id,
+        'profile_path': existing_user.profile_path,
+    }
+    
+    return redirect('/profile/settings')
+
+
+@app.post('/delete/comment')
+def delete_comment():
+    comment_to_delete = User_comment.query.get(session['user']['comment_id'])
+    db.session.delete(comment_to_delete)
+    db.session.commit()
+    return render_template('index.html')
 
