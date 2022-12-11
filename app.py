@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, flash, session
+from flask import Flask, render_template, request, redirect, flash, session, jsonify
 import os
 from dotenv import load_dotenv
 from src.models import db, User_account
@@ -20,8 +20,13 @@ bcrypt = Bcrypt(app)
 
 @app.route('/', methods=['POST', 'GET'])
 def index():
-    if request.method == 'POST':
-        ##TODO update vote status on server
+    all_posts = post_repository_singleton.get_all_posts()
+    return render_template('index.html', posts = all_posts, voteStates = [1,1])
+
+
+    
+@app.route('/updatePostVotes', methods=['POST'])
+def updatePostVote():
         if session.get('user') != None:
             current_user_ID = int(session.get('user')['user_account_id'])
             user = user_repository_singleton.get_user_by_id(current_user_ID)
@@ -33,17 +38,15 @@ def index():
                     if int(vote) >= 0 and int(vote) <=2:
                         post_repository_singleton.vote_post(int(current_user_ID), int(postID), vote)
                 
+            
+                
 
             else:
                 print("error user not found")
+                redirect('/register')
         else:
             print("error no user logged in")
             ##todo redirect to log in page
-
-    all_posts = post_repository_singleton.get_all_posts()
-    return render_template('index.html', posts = all_posts)
-
-
 
 @app.route('/profile')
 def profile():

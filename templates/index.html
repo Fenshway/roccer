@@ -107,12 +107,18 @@ crossorigin="anonymous"></script>
 <script>
 
 var currentVoteStates = [];
+var voteCounts = [];
+
   function updatePostVoteUI(at) {
+    voteCount = voteCounts[at];
+    if (voteCount != undefined) {
+      document.getElementById(at.toString() + "count").innerHTML = voteCounts[at];
+    }
     switch(currentVoteStates[at]) {
+
       case 0:
         document.getElementById(at.toString() + "downvote").innerHTML = '<img src="static/assets/downvote-unselected.png">';
         document.getElementById(at.toString() + "upvote").innerHTML = '<img src="static/assets/upvote-unselected.png">';
-
         break
       case 1:
         document.getElementById(at.toString() + "upvote").innerHTML = '<img src="static/assets/upvote-selected.png">';
@@ -142,9 +148,10 @@ var currentVoteStates = [];
         newState= 2;
       }
     }
+
       $.ajax({
           type:'POST',
-          url:'/',
+          url:'/updatePostVotes',
           data:{
             post: postID,
             vote: newState
@@ -153,7 +160,7 @@ var currentVoteStates = [];
           {
             currentVoteStates[index] = newState;
             updatePostVoteUI(index);
-          }
+          },
         })
   }
 
