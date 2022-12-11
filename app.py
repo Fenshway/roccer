@@ -361,5 +361,9 @@ def update_user():
     return redirect('/profile/settings')
 
 
-
-
+@app.post('/delete/comment')
+def delete_comment():
+    comment_to_delete = User_comment.query.get(session['user']['comment_id'])
+    db.session.delete(comment_to_delete)
+    db.session.commit()
+    return render_template('index.html')
