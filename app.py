@@ -88,24 +88,27 @@ def post():
         ##TODO update vote status on server
         print(postID, vote)
     all_posts = post_repository_singleton.get_all_posts()
-    text = request.form.get('text')
-    return render_template('post.html', posts = all_posts, text=text)
+    return render_template('post.html', posts = all_posts)
 
-# @app.route("/reply-comment/<parent_post_id>", methods=['POST'])
-# ## TODO: Login needs to be required to comment
-# def create_comment(parent_post_id):
-#     text = request.form.get('text')
-#     if not text:
-#         flash('Empty Comment. Try again.', category='error')
-#     else: 
-#         post = Post.query.filter_by(post_id = parent_post_id)
-#         if post:
-#             comment = User_comment(comment_text=text, parent_post_id=parent_post_id)
-#             db.session.add(comment)
-#             db.session.commit()
-#         else:
-#             flash('Post does not exist.', category='error')
-#     return redirect('/post')
+@app.route("/reply-comment/<parent_post_id>", methods=['POST'])
+## TODO: Login needs to be required to comment
+def create_comment(parent_post_id):
+    text = request.form.get('text')
+    if not text:
+        flash('Empty Comment. Try again.', category='error')
+    else: 
+        post = Post.query.filter_by(post_id = parent_post_id)
+        if session.get('user') != None:
+            current_user_ID = int(session.get('user')['user_account_id'])
+            if post:
+                comment = User_comment(comment_text=text, parent_post_id=parent_post_id, commented_by_id = current_user_ID)
+                db.session.add(comment)
+                db.session.commit()
+            else:
+                flash('Post does not exist.', category='error')
+        else:
+            print('error no user logged in')
+    return redirect('/post')
 
 @app.get('/create_post')
 def get_create_post():

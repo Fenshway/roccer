@@ -42,7 +42,8 @@
 
 .reply-container{
     padding-left: 50px;
-
+    width: auto;
+    max-width: 600px;
 }
 
 .reply-btn{
@@ -90,8 +91,6 @@
   background-color: #DBE0E5;
 }
 
-
-
 .wrap {
   display: flex;
   flex-direction: column;
@@ -109,6 +108,32 @@
 .light {
   color: gray;
 }
+
+.comment-container{
+  position: relative;
+  display: flex;
+  padding:20px;
+  flex-direction: column;
+  min-width: 0;
+  word-wrap: break-word;
+  background-color: #fff;
+  background-clip: border-box;
+  border-radius: 11px;
+ }
+
+ .individual-comment{
+
+ }
+
+ .comment-text{
+  padding-left: 20px;
+  padding-top: 15px;
+ }
+
+ #profile-image{
+    width: 60px;
+    height: 60px;
+ }
 </style>
 {% endblock %}
 {% block body %}
@@ -174,7 +199,7 @@ var currentVoteStates = [];
   {% if posts == [] %}
 <h2 class="text-center">Please go back to the home page.</h2>
   {% endif %}
-  {% if posts != {} %}
+  {% if posts != {}%}
   <div class="background">
     {% for post in posts %}
     <div class="container container-h" >
@@ -202,43 +227,48 @@ var currentVoteStates = [];
         </iframe>
           {% endif %}
           {% if post.post_type == "stored_video" %}
-          <!--TODO display video stored on server-->
+          <div class="stored_vid">
+            <video controls>
+              <source src="/static/assets/post_videos/{{post.stored_video_path}}" type="video/mp4">
+            </video>
+           </div>
           {% endif %}
 
           {% if post.post_type == "stored_image" %}
-          <!--TODO display image stored on server-->
-          {% endif %}
-        </div>
-        <p class="light-content-container">{{post.comments|length}} Comment(s)</p>
-        <div class="comment-text"> 
-        {{text}}
-        </div>
-        <div class="reply-container"> 
-            <form method="post" action="/post"> 
-                <div class="mb-3">
-                    <input class="form-control" name="text" id="textComment" rows="5"> </input>
-                </div>
-                <div class="reply-btn"> 
-                <button type="submit" class="btn btn-primary">Reply</button> 
-                </div>    
-            </form>
-         <!-- <form method="post" action="/reply-comment/{{post.post_id}}"> 
-            <div class="mb-3">
-                <input class="form-control" name="text" id="textComment" rows="5"> </input>
-            </div>
-            <div class="reply-btn"> 
-            <button type="submit" class="btn btn-primary">Reply</button> 
-            </div>    
-          </form> -->
+        <div class="stored_img">
+          <img src="/static/assets/post_images/{{post.stored_image_path}}" alt="">
         </div>
 
+        {% endif %}
+        </div>
+          <p class="light-content-container">{{post.comments|length}} Comment(s)</p>
+
+          <div class="reply-container"> 
+            <form method="post" action="/reply-comment/{{post.post_id}}"> 
+              <div class="mb-3">
+                <input class="form-control" name="text" id="textComment" rows="5"> </input>
+              </div>
+              <div class="reply-btn"> 
+               <button type="submit" class="btn btn-primary">Comment</button> 
+              </div>    
+          </form>
+        </div>
+
+        <div class="comment-container">
+          {% for comment in post.comments %} 
+          <div class="individual-comment"> 
+            <img class="mr-3 rounded-circle" id="profile-image" alt="Profile Picture" src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBxARDhAOEBAPEBERDxERDhUPDxAVEA8RFxEXGBYSExYYHSggGBolHRMTIjEhJykrLi4uFx8zODMtNygtLisBCgoKBQUFDgUFDisZExkrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrK//AABEIAOEA4QMBIgACEQEDEQH/xAAbAAEAAwEBAQEAAAAAAAAAAAAAAwUGBAECB//EADsQAAIBAQQFCgQEBgMAAAAAAAABAgMEBRExEiEiQVEGE2FxgZGhscHRMkJSsmJyguEjJHOSotJDY/D/xAAUAQEAAAAAAAAAAAAAAAAAAAAA/8QAFBEBAAAAAAAAAAAAAAAAAAAAAP/aAAwDAQACEQMRAD8A/cQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEdavCCxnKMV0tIrq1/UV8OlPqWC8QLUGeqco38tNL80n6IhfKGtujTXZL3A04MuuUNb6af8AbL3JqfKOXzU4vqk16MDRAqKPKCk/iU4dmK8NfgWNntVOeuE4y6nr7gJgAAAAAAAAAAAAAAAAAAAAAAAACmvW+lDGFPCUsm/lj7sCxtdtp0ljOWHBb31IoLbf1SWKprm1xzn7IqqlRyblJuTebeZ8gezm5PGTbfFttngAAAAAAACeDxWp7sMwALOx33VhgpfxI/i+LsfuaCw3jTq/C8Jb4vVJe5jBFtPFPBrJrNAb4FBdd+ZQrdSn/t7l8mB6AAAAAAAAAAAAAAAAAU1/XloLmoPaktpr5Y+7Agvq986VJ9E5L7Y+5QgAAAAAAAAAAAAAAAAAC2ua9nTapzexuf0fsVIA3qe89M9yfvLBqhN6v+Nvd+H2NCAAAAAAAAAAAAAAc9vtSpU5VHuyXF7kYupUcpOUni28Wy15R2vSqKmsoZ/mfsvUqAAAAAAAASUKMpy0YrF+S4vggIwXtluOK11G5PhHVHvzfgd8LDSWVOHbFN+IGTBrZWOk86cP7UcVpuSD1wbg++PuBnwTWqyzpy0ZrDg9z6mQgAAAAABPflwNhc9t52km/ijsz6+PaY877ltfN1li9mezL0feBrwAAAAAAAAAAI7RVUISm8oxbJCq5R1sKGj9ckuxa/RAZec3JuTzbbfW8zwAAAAAAAks9FzkoRzfcuLfQamx2WNKOjH9T3yfFnByfs+EHVecnhH8qz8fItgAAAAACOvRjOLhJYp+D4rpMtbbK6U3B698XxXE1pX31Z9Ok5b4bS6t67vIDNgAAAAAAA2l12jnKMJ78MJfmWpnUUXJets1KfBqS7Vg/JF6AAAAAAAAAM9ypntU49En4pejNCZjlO/40V/1r7pAVAAAAAAAANbYIYUaa/AvFY+pOQ2KWNKm/wAEfImAAAAAAB5KOKa4prvPQ3qx4AYtrcBJ4tviwAAAAAAWvJueFdr6oSXc0/c1JkLif8zT/V9jNeAAAAAAAAAMxymX8eP9NfdI05neVMNunLjGS7mvcCjAAAAAAABobhr6VPQ3wf8Ai9a9SzMjYrS6U1NdTXFb0auhWjOKlF4p/wDsH0gfYAAAAAcd7V9CjLjLZj25+GJ1zmknJtJJYtvcjL3nbOdnitUY6oLo4vrA5AAAAAAAAd9xL+Zp/q+xmvMrychjaMfphJ+S9TVAAAAAAAAACo5S0saKl9E13PV54FuQ2yjp05w+qLXbu8QMOA008Hqa1PoYAAAAAAB0WO2zpPGL1P4k8mR0KE5vCEXJ9G7re4s6VxSaxlNRe5JY97A7rLe1Keb0Hwll2PI7otPJp9RmLRdlWHy6S4w1+GZy61xXegNk3hnqOO03nSh8yk+ENb78kZjFve33s6aF3VZ5QaXGWyvED23XhOrqezFZRXm+JyFxK4ZaOqonLenF4dj/AGK202WdN4Ti1weafUwIQAAAAAAAX/JalqqVOqK835ovziuez6FCCebWlLrev2O0AAAAAAAAAAAMpygsuhW0l8NTa/V8y9e0rDZ3pY+dpOHzLXB8JGMkmm09TTwae5gAAALW7rocsJ1MYx3L5pLp4Imue7dSq1F0wi/uZcgfNKnGK0YpRXBI+gAAaAA8SPQAB5KKaaaTTzTWKZ6AKW8LmzlS7Y/6v0KVm0Ky9rt005wW2s0vn/cDPAAAdd1WXna0Y4bK2p9S3dupHIay4rFzdPFrbng30LcgLJAAAAAAAAAAAAABQcobuzrwX9RL7vcvzxoDBFhc1i5yelJbMP8AKW5E98XS4PTppuDetLOD9i2sVnVOnGHBa+mW8CcAAAAAAAAAAAAAAAFFftiwfPRWpvCfQ/q7SoNjWpqUXF5STTKGwXRKdRqeKhCWEn9XRH3AkuG7tOXOyWxF7P4pL0Rpz5pwUUopYJLBJbkfQAAAAAAAAAAAAAAAAHmBHOnvRKAOUHRKCZDKDQHyAAAAAAAAAAAPqMGyWNNLpA+IU+JKkegAAAAAAAAAAAAAAAAAAAAAAAAD5cEz4dLpJQBA6TPObfA6ABz82+B6qTJwBEqXSfagkfQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA/9k="/> 
+            <span class="light">Commented by {{post.posted_by.username}} {{comment.created_at}}</span>
+              <div class="comment-text"> 
+                <p> {{comment.comment_text}} </p>
+              </div>
+          </div>
+          {% endfor %}
+        </div>
 
       </div>
     </div>
-
-    
-
-    {% endfor %}  
+  {% endfor %}  
   </div>
   {% endif %}
 
