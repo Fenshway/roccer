@@ -334,7 +334,7 @@ def update_user():
     new_pw1 = request.form.get('new_pw')
     new_pw2 = request.form.get('new_pw2')
 
-    if new_pw1 is not '' and new_pw2 is not '':
+    if new_pw1 != '' and new_pw2 != '':
         if new_pw1 != new_pw2:
             flash('New passwords do not match')
             return redirect('/update_user_form')
