@@ -5,6 +5,10 @@ class PostRepository:
     def get_all_posts(self):
         posts = Post.query.all()
         return posts
+    def get_all_posts_ordered(self):
+        posts = Post.query.order_by(Post.created_at.desc()).all()
+        return posts
+
     def get_post_by_id(self, post_id):
         return Post.query.get(post_id)
         

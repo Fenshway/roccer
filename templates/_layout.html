@@ -33,7 +33,13 @@
       <form class="form-inline d-flex mx-auto" action="/search" method="get">
         <input name="topic" class="form-control me-2" type="search" style="width:600px;" placeholder="Search Roccer">
         <button type="submit" class="btn btn-light">Search</button>
+        
       </form>
+      <form action="/search" method="get">
+        <input name="order" value="1" class="form-control me-2" type="hidden" style="width:600px;" placeholder="Search Roccer">
+        <button id="sort" class="btn btn-primary">Sort</button>
+      </form>
+      
       <ul class="navbar-nav d-flex">
       {% if username %}
         <li class="nav-item dropdown ms-auto">

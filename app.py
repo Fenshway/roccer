@@ -274,6 +274,14 @@ def delete():
 @app.get('/search')
 def search():
     topic = request.args.get('topic')
+    order = request.args.get('order')
+    if order:
+        all_posts = post_repository_singleton.get_all_posts_ordered()
+        if 'user' in session:
+            username=session['user']['username']
+            return render_template('index.html', posts = all_posts, username=username)
+    
+        return render_template('index.html', posts = all_posts)
     searched_posts = post_repository_singleton.search_post(topic)
 
     if 'user' in session:
@@ -281,4 +289,5 @@ def search():
         return render_template('index.html', posts = searched_posts, username=username)
     
     return render_template('index.html', posts = searched_posts)
+
 
