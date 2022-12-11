@@ -170,7 +170,7 @@ var currentVoteStates = [];
         <div class="header-container">
           <div class="vote-container">
             <button id="{{ loop.index|string }}upvote" class="vote-button upvote" onclick="votePressed('{{post.post_id}}', 'upvote', '{{loop.index}}')"><img src="static/assets/upvote-unselected.png"></button>
-            <h6 id="{{ post.post_id|string }}count"class="center">1</h6>
+            <h6 id="{{ post.post_id|string }}count"class="center">{{post.get_vote_count()}}</h6>
             <button id="{{ loop.index|string }}downvote" class="vote-button downvote" onclick="votePressed('{{post.post_id}}', 'downvote', '{{loop.index}}')"><img src="static/assets/downvote-unselected.png"></button>
           </div>
           <div >

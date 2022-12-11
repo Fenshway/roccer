@@ -21,10 +21,25 @@ bcrypt = Bcrypt(app)
 @app.route('/', methods=['POST', 'GET'])
 def index():
     if request.method == 'POST':
-        postID = request.form.get("post")
-        vote = request.form.get("vote")
         ##TODO update vote status on server
-        print(postID, vote)
+        if session.get('user') != None:
+            current_user_ID = int(session.get('user')['user_account_id'])
+            user = user_repository_singleton.get_user_by_id(current_user_ID)
+            if user != None:
+                postID = request.form.get("post")
+                vote = request.form.get("vote")
+                
+                if postID.isnumeric() and vote.isnumeric():
+                    if int(vote) >= 0 and int(vote) <=2:
+                        post_repository_singleton.vote_post(int(current_user_ID), int(postID), vote)
+                
+
+            else:
+                print("error user not found")
+        else:
+            print("error no user logged in")
+            ##todo redirect to log in page
+
     all_posts = post_repository_singleton.get_all_posts()
     return render_template('index.html', posts = all_posts)
 
@@ -92,19 +107,19 @@ def login():
         flash('Error logging in. Please try again.')
         return redirect('/login_page')
 
-    if not bcrypt.check_password_hash(existing_user.password, password):
+    if not bcrypt.check_password_hash(existing_user.user_password, password):
         flash('Error logging in. Please try again.')
         return redirect('/login_page')
 
     session['user'] = {
         'user_account_id': existing_user.user_account_id
     }
-    flash('I'll delete this message soon. You are logged in.')
+    flash("I'll delete this message soon. You are logged in.")
     return redirect('/')
 
 @app.post('/logout')
 def logout():
-    session.pop('user')
+    session.pop('user', default=None)
     return redirect('/')
 
 #@app.post('/delete')

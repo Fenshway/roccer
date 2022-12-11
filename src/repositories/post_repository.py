@@ -1,5 +1,6 @@
-from src.models import Post
+from src.models import Post, Post_Vote
 from app import db
+from sqlalchemy import exists, inspect
 
 class PostRepository:
     def get_all_posts(self):
@@ -33,6 +34,48 @@ class PostRepository:
 
     def search_post(self, post_title, user_id, post_type):
         pass
+    
+
+    def vote_post(self, user_id, post_id, vote):
+        vote_update = Post_Vote.query.get((user_id,post_id))
+        print(user_id,post_id)
+        if vote == "0":
+            pass
+        elif vote == "1":
+                if vote_update == None:
+                    new_vote = Post_Vote(user_id,post_id, True)
+                    post = post_repository_singleton.get_post_by_id(post_id)
+                    db.session.add(new_vote)
+                    post.votes.append(new_vote)
+                    db.session.commit()
+                else:
+                    vote_update.upvote = True
+                    db.session.commit()
+
+            
+        elif vote == "2":
+            if vote_update == None:
+                print("F")
+                new_vote = Post_Vote(user_id,post_id, False)
+                post = post_repository_singleton.get_post_by_id(post_id)
+                db.session.add(new_vote)
+                post.votes.append(new_vote)
+                db.session.commit()
+                
+            else:
+                print("D")
+                vote_update.upvote = False
+                db.session.commit()
+
+         
+        
+
+        
+        
+       
+
+
+
     
 
 post_repository_singleton = PostRepository()
