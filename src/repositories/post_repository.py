@@ -38,31 +38,30 @@ class PostRepository:
 
     def vote_post(self, user_id, post_id, vote):
         vote_update = Post_Vote.query.get((user_id,post_id))
-        if vote == "0":
-            if vote_update != None:
-                db.session.delete(vote_update) 
-            
-        elif vote == "1":
-                if vote_update == None:
-                    new_vote = Post_Vote(user_id,post_id, True)
-                    post = post_repository_singleton.get_post_by_id(post_id)
-                    db.session.add(new_vote)
-                    post.votes.append(new_vote)
-                else:
+        if vote_update != None:
+            if vote_update.upvote:
+                if vote == "1":
+                    db.session.delete(vote_update) 
+                elif vote == "2":
+                    vote_update.upvote = False
+            else:
+                if vote == "1":
                     vote_update.upvote = True
-
-            
-        elif vote == "2":
-            if vote_update == None:
-
+                elif vote == "2":
+                    db.session.delete(vote_update) 
+        else:
+            if vote == "1":
+                new_vote = Post_Vote(user_id,post_id, True)
+                post = post_repository_singleton.get_post_by_id(post_id)
+                db.session.add(new_vote)
+                post.votes.append(new_vote)
+            elif vote == "2":
                 new_vote = Post_Vote(user_id,post_id, False)
                 post = post_repository_singleton.get_post_by_id(post_id)
                 db.session.add(new_vote)
                 post.votes.append(new_vote)
-                
-            else:
-                vote_update.upvote = False
-        db.session.commit()
+
+        db.session.commit() 
         
 
          

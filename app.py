@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, redirect, flash, session, jsonify
 import os
 from dotenv import load_dotenv
-from src.models import db, User_account
+from src.models import db, User_account, Post_Vote
 from flask_bcrypt import Bcrypt
 from src.repositories.user_account_repository import user_repository_singleton
 from src.repositories.post_repository import post_repository_singleton
@@ -21,32 +21,56 @@ bcrypt = Bcrypt(app)
 @app.route('/', methods=['POST', 'GET'])
 def index():
     all_posts = post_repository_singleton.get_all_posts()
-    return render_template('index.html', posts = all_posts, voteStates = [1,1])
+
+    states = []
+    if session.get('user') != None:
+        current_user_ID = int(session.get('user')['user_account_id'])
+        user = user_repository_singleton.get_user_by_id(current_user_ID)
+        if user != None: 
+            for post in all_posts:
+                vote_update = Post_Vote.query.get((current_user_ID, post.post_id))
+                vote_state = 0
+                if vote_update != None:
+                    if vote_update.upvote:
+                        vote_state = 1
+                    else:
+                        vote_state = 2
+                states.append(vote_state)
+    return render_template('index.html', posts = all_posts , vote_states = states)
 
 
-    
+
 @app.route('/updatePostVotes', methods=['POST'])
 def updatePostVote():
         if session.get('user') != None:
             current_user_ID = int(session.get('user')['user_account_id'])
             user = user_repository_singleton.get_user_by_id(current_user_ID)
-            if user != None:
+            if user != None: 
                 postID = request.form.get("post")
                 vote = request.form.get("vote")
                 
                 if postID.isnumeric() and vote.isnumeric():
-                    if int(vote) >= 0 and int(vote) <=2:
+                    if int(vote) >= 1 and int(vote) <=2:
                         post_repository_singleton.vote_post(int(current_user_ID), int(postID), vote)
-                
-            
-                
-
+                        vote_update = Post_Vote.query.get((current_user_ID, postID))
+                        vote_state = 0
+                        if vote_update != None:
+                            if vote_update.upvote:
+                                vote_state = 1
+                            else:
+                                vote_state = 2
+                        return(jsonify(
+                            status="200",
+                            vote_count=post_repository_singleton.get_post_by_id(postID).get_vote_count(),
+                            state=vote_state))
             else:
+                flash('Please log in to upvote posts')
                 print("error user not found")
-                redirect('/register')
+                return(jsonify(status="404"))
         else:
+            flash('Please log in to upvote posts')
             print("error no user logged in")
-            ##todo redirect to log in page
+            return(jsonify(status="400"))
 
 @app.route('/profile')
 def profile():
