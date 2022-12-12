@@ -3,23 +3,25 @@ from sqlalchemy import func, update
 db = SQLAlchemy()
 from datetime import datetime
 
-post_vote = db.Table(
-    'post_vote',
-    db.Column('user_account_id', db.Integer, \
-        db.ForeignKey('user_account.user_account_id'), primary_key=True),
-    db.Column('post_id', db.Integer, \
-        db.ForeignKey('post.post_id'), primary_key=True),
-    db.Column('upvote', db.Boolean, nullable=False)
-)
+class Post_Vote(db.Model):
+    __tablename__ = "post_vote"
+    user_account_id = db.Column(db.ForeignKey("user_account.user_account_id"), nullable=False, primary_key=True)
+    post_id = db.Column(db.ForeignKey("post.post_id"), nullable=False, primary_key=True)
+    created_at = db.Column(db.TIMESTAMP(timezone=False), nullable=False, server_default=func.now())
+    upvote = db.Column(db.Boolean, nullable=False)
 
-comment_vote = db.Table(
-    'comment_vote',
-    db.Column('user_account_id', db.Integer, \
-        db.ForeignKey('user_account.user_account_id'), primary_key=True),
-    db.Column('post_id', db.Integer, \
-        db.ForeignKey('post.post_id'), primary_key=True),
-    db.Column('upvote', db.Boolean, nullable=False)
-)
+    post = db.relationship('Post', backref= 'votes')
+    def __init__(self, user_account_id, post_id, vote):
+        self.user_account_id = user_account_id
+        self.post_id = post_id
+        self.upvote = vote
+
+
+class Comment_vote(db.Model):
+    user_account_id = db.Column(db.Integer, primary_key=True)
+    user_comment_id = db.Column(db.Integer, primary_key=True)
+    vote = db.Column(db.Integer, nullable=False)
+    created_at = db.Column(db.TIMESTAMP(timezone=False), nullable=False, server_default=func.now())
 
 class User_account(db.Model):
     user_account_id = db.Column(db.Integer, primary_key=True)
@@ -50,7 +52,6 @@ class Post(db.Model):
         db.ForeignKey('user_account.user_account_id'), nullable=True)
         
     posted_by = db.relationship('User_account', backref='posts')
-    votes = db.relationship('User_account', secondary=post_vote, backref='votes')
 
     def __init__(self, title, post_type, embedded_video_link, stored_video_path, stored_image_path, post_text, posted_by_id):
         self.title = title
@@ -60,6 +61,17 @@ class Post(db.Model):
         self.stored_image_path = stored_image_path
         self.post_text = post_text
         self.posted_by_id = posted_by_id
+    
+    def get_vote_count(post):
+        total = 0
+        votes = post.votes 
+        for vote in votes:
+            if vote.upvote:
+                total += 1
+            else:
+                total -= 1
+        return total
+        
 
 
     def get_time_text(post):

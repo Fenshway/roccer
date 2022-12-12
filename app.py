@@ -1,8 +1,8 @@
-from flask import Flask, render_template, request, redirect, flash, session
+from flask import Flask, render_template, request, redirect, flash, session, jsonify
 from werkzeug.utils import secure_filename
 import os
 from dotenv import load_dotenv
-from src.models import db, User_account, User_comment, Post
+from src.models import db, User_account, User_comment, Post, Post_Vote
 from flask_bcrypt import Bcrypt
 from src.repositories.user_account_repository import user_repository_singleton
 from src.repositories.post_repository import post_repository_singleton
@@ -22,20 +22,83 @@ bcrypt = Bcrypt(app)
 
 @app.route('/', methods=['POST', 'GET'])
 def index():
+    all_posts = post_repository_singleton.get_all_posts()
+    states = []
+    username = None
+    if session.get('user') != None:
+        current_user_ID = int(session.get('user')['user_account_id'])
+        user = user_repository_singleton.get_user_by_id(current_user_ID)
+        if user != None: 
+            username = session['user']['username']
+            for post in all_posts:
+                vote_update = Post_Vote.query.get((current_user_ID, post.post_id))
+                vote_state = 0
+                if vote_update != None:
+                    if vote_update.upvote:
+                        vote_state = 1
+                    else:
+                        vote_state = 2
+                states.append(vote_state)
+    if username == None:
+        return render_template('index.html', posts = all_posts , vote_states = states)
+    else:
+        return render_template('index.html', posts = all_posts , vote_states = states, username = username)
+
+
+@app.route('/updatePostVotes', methods=['POST'])
+def updatePostVote():
+        if session.get('user') != None:
+            current_user_ID = int(session.get('user')['user_account_id'])
+            user = user_repository_singleton.get_user_by_id(current_user_ID)
+            if user != None: 
+                postID = request.form.get("post")
+                vote = request.form.get("vote")
+                
+                if postID.isnumeric() and vote.isnumeric():
+                    if int(vote) >= 1 and int(vote) <=2:
+                        post_repository_singleton.vote_post(int(current_user_ID), int(postID), vote)
+                        vote_update = Post_Vote.query.get((current_user_ID, postID))
+                        vote_state = 0
+                        if vote_update != None:
+                            if vote_update.upvote:
+                                vote_state = 1
+                            else:
+                                vote_state = 2
+                        return(jsonify(
+                            status="200",
+                            vote_count=post_repository_singleton.get_post_by_id(postID).get_vote_count(),
+                            state=vote_state))
+            else:
+                flash('Please log in to upvote posts')
+                print("error user not found")
+                return(jsonify(status="404"))
+        else:
+            flash('Please log in to upvote posts')
+            print("error no user logged in")
+            return(jsonify(status="400"))
+
+@app.get('/profile/settings')
+def settings():
+    if 'user' not in session:
+        return render_template('/')
+
+    first_name=session['user']['first_name']
+    last_name=session['user']['last_name']
+    username=session['user']['username']
+    profile_path=session['user']['profile_path']
+
+    return render_template('settings.html', first_name=first_name, last_name=last_name, username=username, profile_path=profile_path)
+
+
+@app.route('/post', methods=['POST', 'GET'])
+def post():
     if request.method == 'POST':
         postID = request.form.get("post")
         vote = request.form.get("vote")
         ##TODO update vote status on server
         print(postID, vote)
     all_posts = post_repository_singleton.get_all_posts()
-
-    if 'user' in session:
-        username=session['user']['username']
-        return render_template('index.html', posts = all_posts, username=username)
-   
-    return render_template('index.html', posts = all_posts)
-
-
+    return render_template('post.html', posts = all_posts)
 
 @app.get('/profile')
 def profile():
@@ -72,29 +135,6 @@ def update_profile_pic():
     
     return render_template('profile.html')
 
-
-@app.get('/profile/settings')
-def settings():
-    if 'user' not in session:
-        return render_template('/')
-
-    first_name=session['user']['first_name']
-    last_name=session['user']['last_name']
-    username=session['user']['username']
-    profile_path=session['user']['profile_path']
-
-    return render_template('settings.html', first_name=first_name, last_name=last_name, username=username, profile_path=profile_path)
-
-
-@app.route('/post', methods=['POST', 'GET'])
-def post():
-    if request.method == 'POST':
-        postID = request.form.get("post")
-        vote = request.form.get("vote")
-        ##TODO update vote status on server
-        print(postID, vote)
-    all_posts = post_repository_singleton.get_all_posts()
-    return render_template('post.html', posts = all_posts)
 
 @app.route("/reply-comment/<parent_post_id>", methods=['POST'])
 ## TODO: Login needs to be required to comment
