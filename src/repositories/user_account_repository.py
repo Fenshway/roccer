@@ -7,7 +7,7 @@ class UserRepository:
         return users
 
     def get_user_by_id(self, user_id):
-        User_account.query.get(user_id)
+        return User_account.query.get(user_id)
 
     def create_user(self, first_name, last_name, username, password, profile_path):
         new_user = User_account(first_name, last_name, username, password, profile_path)
