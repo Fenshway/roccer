@@ -19,10 +19,7 @@ app.secret_key = os.getenv('APP_SECRET_KEY')
 db.init_app(app)
 
 bcrypt = Bcrypt(app)
-
-@app.route('/', methods=['POST', 'GET'])
-def index():
-    all_posts = post_repository_singleton.get_all_posts()
+def get_index_render_template(for_posts):
     states = []
     username = None
     if session.get('user') != None:
@@ -30,7 +27,7 @@ def index():
         user = user_repository_singleton.get_user_by_id(current_user_ID)
         if user != None: 
             username = session['user']['username']
-            for post in all_posts:
+            for post in for_posts:
                 vote_update = Post_Vote.query.get((current_user_ID, post.post_id))
                 vote_state = 0
                 if vote_update != None:
@@ -40,9 +37,16 @@ def index():
                         vote_state = 2
                 states.append(vote_state)
     if username == None:
-        return render_template('index.html', posts = all_posts , vote_states = states)
+        return render_template('index.html', posts = for_posts , vote_states = states)
     else:
-        return render_template('index.html', posts = all_posts , vote_states = states, username = username)
+        return render_template('index.html', posts = for_posts , vote_states = states, username = username)
+
+@app.route('/', methods=['POST', 'GET'])
+def index():
+    all_posts = post_repository_singleton.get_all_posts()
+    return(get_index_render_template(all_posts))
+
+
 
 
 @app.route('/updatePostVotes', methods=['POST'])
@@ -317,7 +321,7 @@ def delete():
     user_to_delete = User_account.query.get(session['user']['user_account_id'])
     db.session.delete(user_to_delete)
     db.session.commit()
-    return render_template('index.html')
+    return(get_index_render_template(post_repository_singleton.get_all_posts()))
     #user_to_delete = User_account.query.filter_by()
 
 @app.get('/search')
@@ -326,18 +330,9 @@ def search():
     order = request.args.get('order')
     if order:
         all_posts = post_repository_singleton.get_all_posts_ordered()
-        if 'user' in session:
-            username=session['user']['username']
-            return render_template('index.html', posts = all_posts, username=username)
-    
-        return render_template('index.html', posts = all_posts)
+        return(get_index_render_template(all_posts))
     searched_posts = post_repository_singleton.search_post(topic)
-
-    if 'user' in session:
-        username=session['user']['username']
-        return render_template('index.html', posts = searched_posts, username=username)
-    
-    return render_template('index.html', posts = searched_posts)
+    return(get_index_render_template(searched_posts))
 
 @app.get('/update_user_form')
 def update_user_form():
@@ -414,5 +409,5 @@ def delete_comment():
     comment_to_delete = User_comment.query.get(session['user']['comment_id'])
     db.session.delete(comment_to_delete)
     db.session.commit()
-    return render_template('index.html')
+    return(get_index_render_template(post_repository_singleton.get_all_posts()))
 
