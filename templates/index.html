@@ -92,8 +92,22 @@
     color: gray;
   }
 
+  .text-post p {
+    width: 635px;
+  }
+
   .stored_img img {
-    width: 100%;
+    width: 635px;
+    height: 350px;
+  }
+
+  .stored_vid video {
+    width: 635px;
+    height: 350px;
+  }
+
+  .embedded_vid iframe {
+    width: 635px;
     height: 350px;
   }
 
@@ -101,13 +115,40 @@
     color: gray;
   }
 
-  .post-title {
-    color: black;
+  p.light {
+    margin-bottom: 5px;
   }
 
-  .stored_vid video {
-    width: 100%;
-    height: 350px;
+  .post-header {
+    display: flex;
+    color: #808080;
+  }
+
+  .post-header span {
+    margin-bottom: 13px;
+    font-weight: 600;
+  }
+
+  .header-dot-divider {
+    height: 15px;
+    display: inline-flex;
+    align-items: center;
+    margin: 0px 5px;
+  }
+
+  .post-title h3 {
+    color: black;
+    margin-bottom: 0px;
+  }
+
+  .comment {
+    padding: 10px 0px 10px 50px;
+    color: #808080;
+    font-weight: 600;
+  }
+
+  .comment svg {
+    margin-right: 5px;
   }
 
   .center-sort-container {
@@ -278,20 +319,32 @@
           </button>
         </div>
         <div>
-          <p class="light">Posted by u/{{post.posted_by.username}} {{post.get_time_text()}}</p>
-          <h3>{{post.title}}</h3>
+          <div class="post-header">
+            <span class="">Posted by u/</span>
+            <span>{{post.posted_by.username}}</span>
+            <span class="header-dot-divider">.</span>
+            <span>{{post.get_time_text()}}</span>
+          </div>
+
+          <div class="post-title">
+            <h3>{{post.title}}</h3>
+          </div>
           </a>
         </div>
       </div>
       <div class="content-container">
         {% if post.post_type == "text" %}
-        <p> {{post.post_text}}</p>
+        <div class="text-post">
+          <p> {{post.post_text}}</p>
+        </div>
         {% endif %}
 
         {% if post.post_type == "embedded_video" %}
-        <iframe width=100% height="350" src='{{post.embedded_video_link}}' frameborder="0" allowfullscreen>
+        <div class="embedded_vid">
+          <iframe src='{{post.embedded_video_link}}' frameborder="0" allowfullscreen>
 
-        </iframe>
+          </iframe>
+        </div>
         {% endif %}
         {% if post.post_type == "stored_video" %}
         <div class="stored_vid">
@@ -308,7 +361,25 @@
 
         {% endif %}
       </div>
-      <p class="light content-container">{{post.comments|length}} comments</p>
+
+      {% if post.comments|length != 1 %}
+      <p class="light comment"> <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+          class="bi bi-chat-left-dots" viewBox="0 0 16 16">
+          <path
+            d="M14 1a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H4.414A2 2 0 0 0 3 11.586l-2 2V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12.793a.5.5 0 0 0 .854.353l2.853-2.853A1 1 0 0 1 4.414 12H14a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z" />
+          <path
+            d="M5 6a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm4 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm4 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0z" />
+        </svg> {{post.comments|length}} comments</p>
+
+      {% else %}
+      <p class="light comment"> <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+          class="bi bi-chat-left-dots" viewBox="0 0 16 16">
+          <path
+            d="M14 1a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H4.414A2 2 0 0 0 3 11.586l-2 2V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12.793a.5.5 0 0 0 .854.353l2.853-2.853A1 1 0 0 1 4.414 12H14a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z" />
+          <path
+            d="M5 6a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm4 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm4 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0z" />
+        </svg> {{post.comments|length}} comment</p>
+      {% endif %}
     </div>
   </div>
 
