@@ -44,6 +44,7 @@ def get_index_render_template(for_posts):
 @app.route('/', methods=['POST', 'GET'])
 def index():
     all_posts = post_repository_singleton.get_all_posts()
+
     return(get_index_render_template(all_posts))
 
 
