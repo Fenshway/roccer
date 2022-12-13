@@ -15,7 +15,7 @@
 
   </style>
   <title>{% block title %}{% endblock %}</title>
-  {% block style %} {% endblock %}
+  {% block style %}{% endblock %}
 </head>
 
 <body>
@@ -32,7 +32,7 @@
     <div class="collapse navbar-collapse justify-content-center" id="navbarSupportedContent">
       <form class="form-inline d-flex mx-auto" action="/search" method="get">
         <input name="topic" class="form-control me-2" type="search" style="width:600px;" placeholder="Search Roccer">
-        <button type="submit" class="btn btn-light">Search</button>
+        <button type="submit" class="btn btn-light search">Search</button>
       </form>
 
 
@@ -43,7 +43,6 @@
             aria-haspopup="true" aria-expanded="false">{{username}}</a>
           <div class="dropdown-menu" aria-labelledby="navbarDropdown">
             <a class="dropdown-item" href="/">Home</a>
-            <a class="dropdown-item" href="#">Search</a>
             <a class="dropdown-item" href="/profile">Profile</a>
             <a class="dropdown-item" href="/profile/settings">Settings</a>
             <div class="dropdown-divider"></div>
