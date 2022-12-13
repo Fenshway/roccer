@@ -196,7 +196,7 @@
               {% endif %}
               
             </button>
-            <h6 id="{{ post.post_id|string }}count"class="center">{{post.get_vote_count()}}</h6>
+            <h6 id="{{ loop.index|string }}count"class="center">{{post.get_vote_count()}}</h6>
             <button id="{{ loop.index|string }}downvote" class="vote-button downvote" onclick="votePressed('{{post.post_id}}', 'downvote', '{{loop.index}}')">
               {% if vote_states != [] %}
               {% if vote_states[loop.index - 1] == 0 %}
