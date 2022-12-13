@@ -50,11 +50,12 @@ CREATE TABLE IF NOT EXISTS user_comment (
 );
 
 CREATE TABLE IF NOT EXISTS post_vote (
+	post_vote_id SERIAL NOT NULL,
 	user_account_id INT NOT NULL,
 	post_id INT NOT NULL, 
 	upvote BOOLEAN NOT NULL,
 	created_at timestamp NOT NULL DEFAULT now(),
-	PRIMARY KEY (user_account_id, post_id),
+	PRIMARY KEY (user_account_id,post_vote_id),
 	FOREIGN KEY (user_account_id) REFERENCES user_account(user_account_id) ON DELETE CASCADE,
 	FOREIGN KEY (post_id) REFERENCES post(post_id) ON DELETE CASCADE
 );
