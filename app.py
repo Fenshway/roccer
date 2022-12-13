@@ -42,33 +42,18 @@ def profile():
     if 'user' not in session:
         return redirect('/')
 
+    user_id = session['user']['user_account_id']
     first_name=session['user']['first_name']
     last_name=session['user']['last_name']
     username=session['user']['username']
     profile_path=session['user']['profile_path']
     
-    return render_template('profile.html', first_name=first_name, last_name=last_name, username=username, profile_path=profile_path)
+    user_posts = post_repository_singleton.get_all_posts_by_user(user_id)
+    return render_template('profile.html', first_name=first_name, last_name=last_name, username=username, profile_path=profile_path, user_posts=user_posts)
 
 @app.post('/profile')
-def update_profile_pic():
-    # ---------------INCOMPLETE. Will finish -Ivan--------------
-
-    
-    # if 'profile' not in request.files:
-    #     return redirect('/profile')
-
-    # profile_picture = request.files['profile']
-
-    # if profile_picture.filename == '':
-    #     return redirect('/profile')
-    
-    # if profile_picture.filename.rsplit('.', 1)[1].lower() not in ['jpg', 'jpeg', 'gif', 'png']:
-    #     return redirect('/profile')
-
-    # safe_filename = secure_filename(profile_picture.filename)
-
-    # profile_picture.save(os.path.join('static/assets', 'profile-pics', safe_filename))
-
+def get_user_posts():
+    # all_posts = post_repository_singleton.get_all_posts()
     
     return render_template('profile.html')
 
@@ -128,15 +113,6 @@ def get_create_post():
 def create_post():
     title = request.form.get('title')
     text = request.form.get('text')
-
-    # print(f'Title: {title}')
-    # print(f'Text: {text}')
-    # print(f'Image: {image}')
-    # print(f'Video: {video}')
-    # print(f'Link: {url}')
-    # print(f'Embed VIdeo: {embed_video}')
-
-    
 
     if title and text:
         post_repository_singleton.create_post_text(title, text, session['user']['user_account_id'])

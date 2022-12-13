@@ -7,7 +7,11 @@ class PostRepository:
         return posts
     def get_post_by_id(self, post_id):
         return Post.query.get(post_id)
-        
+
+    def get_all_posts_by_user(self, posted_by_id):
+        posts = Post.query.filter_by(posted_by_id=posted_by_id).all()
+        return posts
+
     def create_post_embedded_video(self, title, embedded_video_link, posted_by_id):
         new_post = Post(title, 'embedded_video', embedded_video_link, None, None, None, posted_by_id)
         db.session.add(new_post)

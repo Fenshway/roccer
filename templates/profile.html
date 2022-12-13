@@ -3,62 +3,239 @@
 {% block title %}Roccer | Profile{% endblock %}
 {% block style %}
 <style>
-  #profile {
-    display: none;
+  body {
+    padding: 0;
+    margin: 0;
+    background-color: #DBE0E5;
+    font-family: sans-serif;
   }
 
-  .profile-image {
+  .containerr {
+    max-width: 1000px;
+    margin: 0 auto;
+    background-color: white;
     position: relative;
   }
 
-  .profile-image img {
+  .image-container {
+    width: 100%;
+    text-align: center;
+  }
+
+  .image-container img {
+    width: 200px;
+    height: 200px;
     border-radius: 50%;
     object-fit: cover;
-    height: 125px;
-    width: 125px;
+    margin-top: 40px;
+    margin-bottom: 10px;
   }
 
-  .profile-image div {
-    position: absolute;
-    top: 0;
-    background-color: hsl(0, 100%, 0%, 60%);
+  .username {
+    text-align: center;
+    font-size: 35px;
+  }
+
+  .text-container {
+    text-align: center;
+    margin-bottom: 0px;
+  }
+
+  .text-container button {
+    padding: 0px;
+    border: none;
+    margin: 0px;
+    background-color: transparent;
+  }
+
+  .text-container span {
+    font-size: 20px;
+  }
+
+  .text-container button {
+    font-size: 20px;
+    transition: 0.3s;
+  }
+
+  .text-container button:nth-of-type(1):hover {
+    cursor: pointer;
+    font-size: 25px;
+  }
+
+  .text-container button:nth-of-type(2):hover {
+    cursor: pointer;
+    font-size: 25px;
+  }
+
+  .post-container {
+    margin: 0 auto;
+    background-color: white;
+    max-width: 600px;
+  }
+
+  .post {
+    border: thin solid #ccc;
     width: 100%;
     height: 100%;
-    z-index: 999;
-    opacity: 0;
-    transition: opacity 0.3s ease-in-out;
-    border-radius: 50%;
+    position: relative;
+    margin-bottom: 10px;
   }
 
-  .profile-image div:hover {
-    opacity: 1;
-    cursor: pointer;
+  .vote-container {
+    width: 40px;
+    height: 92px;
+    background-color: #EDEFF1;
+    display: flex;
+    justify-content: center;
+    align-items: top;
   }
 
-  .profile-image div span {
+  .votes {
+    width: max-content;
+    height: max-content;
+    margin-top: 10px;
+  }
+
+  .votes img {
+    display: flex;
+    width: 20px;
+    height: 20px;
+  }
+
+  .votes img:nth-of-type(1) {
+    margin-bottom: 30px;
+  }
+
+  .post-body {
+    width: 560px;
+    height: 100%;
+    margin-left: 40px;
     position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    color: white;
+    top: 0;
+    left: 0;
   }
 
-  h4 {
-    margin-bottom: 0;
-  }
-
-  .username-p {
-    margin-bottom: 4px;
-    color: #6c757d;
-  }
-
-  .card {
+  .containerrr {
     width: 100%;
-    margin-top: 30px;
+    height: 100%;
+    padding: 8px 8px 0px 8px;
+    overflow: hidden;
   }
 
-  body {
+  .post-image {
+    width: 96px;
+    height: 72px;
+    background-color: #EDEFF1;
+    display: inline-block;
+  }
+
+  .post-image svg {
+    display: flex;
+    transform: translate(38px, 26px);
+  }
+
+  .post-title {
+    display: inline-block;
+    vertical-align: top;
+    position: absolute;
+    color: #9B9B9B;
+    padding-left: 4px;
+  }
+
+  .post-header {
+    color: #808080;
+    font-size: 15px;
+    display: inline-block;
+    margin-top: 20px;
+    position: absolute;
+    padding-left: 4px;
+    padding-top: 4px;
+  }
+
+  .post-header span:nth-of-type(1) {
+    padding-right: 2px;
+  }
+
+  .post-title h4 {
+    padding: 0;
+    margin: 0;
+  }
+
+  .post-footer {
+    display: inline-block;
+    color: #878A8C;
+    padding-left: 6px;
+  }
+
+  .post-footer svg {
+    transform: translateY(0%);
+  }
+
+
+
+
+  .no-post-container {
+    margin: 0 auto;
+    border: 1px solid #ccc;
+    border-bottom: none;
     background-color: #DBE0E5;
+    max-width: 600px;
+  }
+
+  .no-post {
+    width: 100%;
+    height: 100px;
+    border-bottom: 1px solid #ccc;
+  }
+
+  .no-post img {
+    display: block;
+    width: 20px;
+    height: 20px;
+  }
+
+  .no-post img:nth-child(1) {
+    margin-top: 5px;
+    margin-bottom: 30px;
+  }
+
+  .no-vote-container {
+    padding: 8px 4px 8px 8px;
+    width: 40px;
+  }
+
+  .no-posts-text {
+    position: absolute;
+    text-align: center;
+    width: 100%;
+    line-height: 23;
+  }
+
+  .no-posts-text p {
+    font-size: 25px;
+  }
+
+  .no-post-image {
+    width: 96px;
+    height: 72px;
+    background-color: rgb(237, 239, 241, 1);
+    display: inline;
+  }
+
+  .tab {
+    overflow: hidden;
+  }
+
+  .tab button {
+    font-size: 20px;
+  }
+
+  .tab button.active {
+    font-weight: bold;
+  }
+
+  .tabcontent {
+    display: none;
   }
 </style>
 
@@ -69,41 +246,220 @@
 {% for message in get_flashed_messages() %}
 <h1>{{message}}</h1>
 {% endfor %}
-<div class="container">
-  <form action="/profile" method="post" enctype="multipart/form-data">
-    <div class="row gutters-sm">
-      <div class="col-md-12 mb-3">
-        <div class="card">
-          <div class="card-body">
-            <div class="d-flex flex-column align-items-center text-center">
+<div class="containerr">
 
+  <div class="image-container">
+    <img src="/static/assets/post_images/champion-teemo-spirit-blossom-prestige-splash.jpg" alt="">
+  </div>
+  <p class="username">u/{{username}}</p>
 
+  <div class="text-container">
+    <div class="tab">
+      <button class="tablinks" onclick="openTab(event, 'myPosts')">My Posts </button>
+      <span>|</span>
+      <button class="tablinks" onclick="openTab(event, 'savedPosts')">Saved Posts</button>
+    </div>
+  </div>
 
-              <div class="profile-image">
-                <label for="profile">
-                  <input type="file" name="profile" id="profile" required />
-                  <img src="/static/assets/profile-pics/{{ profile_path }}" alt="Admin" class="icon">
-                  <!-- <img src="https://img.icons8.com/bubbles/100/000000/user.png" alt="Admin" class="icon" width="125"> -->
-                  <div>
-                    <span>Upload File</span>
-                  </div>
-                </label>
-              </div>
+  {% if user_posts %}
 
+  <div class="post-container">
+    <div id="myPosts" class="tabcontent">
+      {%for post in user_posts %}
 
+      <div class="post">
 
-              <div class="mt-3">
-                <h4>{{first_name}} {{last_name}}</h4>
-                <p class="username-p">u/{{username}}</p>
-                <p class="text-secondary mb-1">Student at UNCC</p>
-                <p class="text-muted font-size-sm">Charlotte, NC</p>
-                <button type="submit" class="btn btn-primary">Apply Changes</button>
-              </div>
-            </div>
+        <div class="vote-container">
+          <div class="votes">
+            <img src="/static/assets/upvote-unselected.png" alt="">
+            <img src="/static/assets/downvote-unselected.png" alt="">
           </div>
         </div>
+
+
+        <div class="post-body">
+          <div class="containerrr">
+
+            <div class="post-image">
+              {% if post.post_type == 'text'%}
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-card-text"
+                viewBox="0 0 16 16">
+                <path
+                  d="M14.5 3a.5.5 0 0 1 .5.5v9a.5.5 0 0 1-.5.5h-13a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h13zm-13-1A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h13a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2h-13z" />
+                <path
+                  d="M3 5.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zM3 8a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9A.5.5 0 0 1 3 8zm0 2.5a.5.5 0 0 1 .5-.5h6a.5.5 0 0 1 0 1h-6a.5.5 0 0 1-.5-.5z" />
+              </svg>
+
+              {% elif post.post_type == 'stored_image'%}
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
+                class="bi bi-card-image" viewBox="0 0 16 16">
+                <path d="M6.002 5.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z" />
+                <path
+                  d="M1.5 2A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h13a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2h-13zm13 1a.5.5 0 0 1 .5.5v6l-3.775-1.947a.5.5 0 0 0-.577.093l-3.71 3.71-2.66-1.772a.5.5 0 0 0-.63.062L1.002 12v.54A.505.505 0 0 1 1 12.5v-9a.5.5 0 0 1 .5-.5h13z" />
+              </svg>
+
+              {% elif post.post_type == 'stored_video'%}
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-film"
+                viewBox="0 0 16 16">
+                <path
+                  d="M0 1a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H1a1 1 0 0 1-1-1V1zm4 0v6h8V1H4zm8 8H4v6h8V9zM1 1v2h2V1H1zm2 3H1v2h2V4zM1 7v2h2V7H1zm2 3H1v2h2v-2zm-2 3v2h2v-2H1zM15 1h-2v2h2V1zm-2 3v2h2V4h-2zm2 3h-2v2h2V7zm-2 3v2h2v-2h-2zm2 3h-2v2h2v-2z" />
+              </svg>
+
+              {% elif post.post_type == 'embedded_video'%}
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
+                class="bi bi-link-45deg" viewBox="0 0 16 16">
+                <path
+                  d="M4.715 6.542 3.343 7.914a3 3 0 1 0 4.243 4.243l1.828-1.829A3 3 0 0 0 8.586 5.5L8 6.086a1.002 1.002 0 0 0-.154.199 2 2 0 0 1 .861 3.337L6.88 11.45a2 2 0 1 1-2.83-2.83l.793-.792a4.018 4.018 0 0 1-.128-1.287z" />
+                <path
+                  d="M6.586 4.672A3 3 0 0 0 7.414 9.5l.775-.776a2 2 0 0 1-.896-3.346L9.12 3.55a2 2 0 1 1 2.83 2.83l-.793.792c.112.42.155.855.128 1.287l1.372-1.372a3 3 0 1 0-4.243-4.243L6.586 4.672z" />
+              </svg>
+
+              {% endif %}
+            </div>
+
+            <div class="post-title">
+              <h4>{{post.title}}</h4>
+            </div>
+
+            <div class="post-header">
+              <span>Posted by u/{{post.posted_by.username}}</span>
+              <span>{{post.get_time_text()}}</span>
+            </div>
+
+            <div class="post-footer">
+              {%if post.comments|length != 1 %}
+              <span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                  class="bi bi-chat-left-dots" viewBox="0 0 16 16">
+                  <path
+                    d="M14 1a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H4.414A2 2 0 0 0 3 11.586l-2 2V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12.793a.5.5 0 0 0 .854.353l2.853-2.853A1 1 0 0 1 4.414 12H14a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z" />
+                  <path
+                    d="M5 6a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm4 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm4 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0z" />
+                </svg> {{post.comments|length}} Comments</span>
+
+              {% else %}
+              <span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                  class="bi bi-chat-left-dots" viewBox="0 0 16 16">
+                  <path
+                    d="M14 1a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H4.414A2 2 0 0 0 3 11.586l-2 2V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12.793a.5.5 0 0 0 .854.353l2.853-2.853A1 1 0 0 1 4.414 12H14a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z" />
+                  <path
+                    d="M5 6a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm4 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm4 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0z" />
+                </svg> {{post.comments|length}} Comment</span>
+              {% endif %}
+            </div>
+
+          </div>
+        </div>
+
       </div>
-  </form>
+
+      {%endfor%}
+    </div>
+  </div>
+
+  {% else %}
+  <!--NO POSTS HERE-->
+  <div class="no-posts-text">
+    <p>Hmm... You have not posted anything</p>
+  </div>
+  <div class="no-post-container">
+
+    <div class="no-post">
+      <div class="no-vote-container">
+        <img class="upvote" src="/static/assets/upvote-unselected.png" alt="">
+        <img class="downvote" src="/static/assets/downvote-unselected.png" alt="">
+      </div>
+    </div>
+
+    <div class="no-post">
+      <div class="no-vote-container">
+        <img class="upvote" src="/static/assets/upvote-unselected.png" alt="">
+        <img class="downvote" src="/static/assets/downvote-unselected.png" alt="">
+      </div>
+    </div>
+
+    <div class="no-post">
+      <div class="no-vote-container">
+        <img class="upvote" src="/static/assets/upvote-unselected.png" alt="">
+        <img class="downvote" src="/static/assets/downvote-unselected.png" alt="">
+      </div>
+    </div>
+
+    <div class="no-post">
+      <div class="no-vote-container">
+        <img class="upvote" src="/static/assets/upvote-unselected.png" alt="">
+        <img class="downvote" src="/static/assets/downvote-unselected.png" alt="">
+      </div>
+    </div>
+
+    <div class="no-post">
+      <div class="no-vote-container">
+        <img class="upvote" src="/static/assets/upvote-unselected.png" alt="">
+        <img class="downvote" src="/static/assets/downvote-unselected.png" alt="">
+      </div>
+    </div>
+
+    <div class="no-post">
+      <div class="no-vote-container">
+        <img class="upvote" src="/static/assets/upvote-unselected.png" alt="">
+        <img class="downvote" src="/static/assets/downvote-unselected.png" alt="">
+      </div>
+    </div>
+
+    <div class="no-post">
+      <div class="no-vote-container">
+        <img class="upvote" src="/static/assets/upvote-unselected.png" alt="">
+        <img class="downvote" src="/static/assets/downvote-unselected.png" alt="">
+      </div>
+    </div>
+
+    <div class="no-post">
+      <div class="no-vote-container">
+        <img class="upvote" src="/static/assets/upvote-unselected.png" alt="">
+        <img class="downvote" src="/static/assets/downvote-unselected.png" alt="">
+      </div>
+    </div>
+
+  </div>
+  {% endif %}
+
+  <div id="savedPosts" class="tabcontent">
+    <div class="no-post-container">
+      {% for i in range (5) %}
+      <div class="no-post">
+        <div class="no-vote-container">
+          <img class="upvote" src="/static/assets/upvote-unselected.png" alt="">
+          <img class="downvote" src="/static/assets/downvote-unselected.png" alt="">
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+
+
 </div>
+
+
+<script>
+  function openTab(evt, myPosts) {
+    // Declare all variables
+    var i, tabcontent, tablinks;
+
+    // Get all elements with class="tabcontent" and hide them
+    tabcontent = document.getElementsByClassName("tabcontent");
+    for (i = 0; i < tabcontent.length; i++) {
+      tabcontent[i].style.display = "none";
+    }
+
+    // Get all elements with class="tablinks" and remove the class "active"
+    tablinks = document.getElementsByClassName("tablinks");
+    for (i = 0; i < tablinks.length; i++) {
+      tablinks[i].className = tablinks[i].className.replace(" active", "");
+    }
+
+    // Show the current tab, and add an "active" class to the button that opened the tab
+    document.getElementById(myPosts).style.display = "block";
+    evt.currentTarget.className += " active";
+  }
+</script>
 
 {% endblock %}
