@@ -19,7 +19,7 @@
 </div>
 {% endfor %}
 
-<div class="col-md-8" style="width: 600px; margin: auto;">
+<div class="col-md-8" style="width: 775px; margin: auto;">
   <div class="card mb-3 mt-4">
     <div class="card-body">
         <h1>Register Now!</h1>
@@ -33,8 +33,8 @@
             <input type="text" class="form-control" name="lastname" id="lastname" placeholder="Enter Last name" required>
           </div>
           <div class="form-group pt-2">
-            <label for="username">Username</label>
-            <input type="username" class="form-control" name="username" id="username" placeholder="Enter Username" required>
+            <label for="username">Username (Letters and numbers only)</label>
+            <input type="username" class="form-control" name="username" id="username" pattern="[a-zA-Z0-9-]+" placeholder="Enter Username" required>
           </div>
           <div class="form-group pt-2">
             <label for="password">Password</label>
