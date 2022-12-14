@@ -103,7 +103,12 @@ def post():
         ##TODO update vote status on server
         print(postID, vote)
     all_posts = post_repository_singleton.get_all_posts()
-    return render_template('post.html', posts = all_posts)
+
+    if 'user' not in session:
+        return render_template('post.html', posts = all_posts)
+
+    username=session['user']['username']
+    return render_template('post.html', posts = all_posts, username=username)
 
 @app.get('/profile')
 def profile():
