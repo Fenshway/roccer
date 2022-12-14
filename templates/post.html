@@ -250,7 +250,8 @@ var currentVoteStates = [];
               </div>
               <div class="reply-btn"> 
                <button type="submit" class="btn btn-primary">Comment</button> 
-              </div>    
+              </div>
+              
           </form>
         </div>
 
@@ -262,6 +263,12 @@ var currentVoteStates = [];
               <div class="comment-text"> 
                 <p> {{comment.comment_text}} </p>
               </div>
+              <form action="/delete/<comment_id>" method="post">
+                <input type="hidden" name="comment_id" value="{{ comment_id }}">
+                <button class="btn btn-danger" type="submit">
+                    Delete Comment
+                </button>
+            </form>            
           </div>
           {% endfor %}
         </div>

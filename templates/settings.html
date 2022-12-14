@@ -92,9 +92,15 @@
         <div class="col">
           <a class="btn btn-info" href="/update_user_form" >Update Settings</a>
         </div>
-        <div class="col">
-          <form action="/delete" method="post"><button class="btn btn-danger" type="submit">Delete Account</button></form>
-        </div>
+
+       <form action="/delete/<user_account_id>" method="post">
+    <input type="hidden" name="user_account_id" value="{{ user_account_id }}">
+    <button class="btn btn-danger" type="submit">
+        Delete Account
+    </button>
+</form>
+
+      
       </div>
     </div>
   </div>

@@ -293,13 +293,14 @@ def logout():
     return redirect('/')
 
 
-@app.post('/delete')
-def delete():
-    user_to_delete = User_account.query.get(session['user']['user_account_id'])
+@app.route('/delete/<user_account_id>', methods=['POST'])
+def delete(user_account_id):
+    user_account_id = session['user']['user_account_id']
+    user_to_delete = User_account.query.get(user_account_id)
     db.session.delete(user_to_delete)
     db.session.commit()
     return(get_index_render_template(post_repository_singleton.get_all_posts()))
-    #user_to_delete = User_account.query.filter_by()
+    
 
 @app.get('/search')
 def search():
@@ -386,10 +387,10 @@ def update_user():
     return redirect('/profile/settings')
 
 
-@app.post('/delete/comment')
-def delete_comment():
-    comment_to_delete = User_comment.query.get(session['user']['comment_id'])
+@app.route('/delete/<comment_id>', methods=['POST'])
+def delete_comment(comment_id):
+    comment_id = int(comment_id)
+    comment_to_delete = User_comment.query.get(comment_id)
     db.session.delete(comment_to_delete)
     db.session.commit()
     return(get_index_render_template(post_repository_singleton.get_all_posts()))
-
