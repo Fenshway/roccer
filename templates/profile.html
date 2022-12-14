@@ -63,11 +63,6 @@
     font-size: 25px;
   }
 
-  .text-container button:nth-of-type(2):hover {
-    cursor: pointer;
-    font-size: 25px;
-  }
-
   .post-container {
     margin: 0 auto;
     background-color: white;
@@ -222,22 +217,6 @@
     background-color: rgb(237, 239, 241, 1);
     display: inline;
   }
-
-  .tab {
-    overflow: hidden;
-  }
-
-  .tab button {
-    font-size: 20px;
-  }
-
-  .tab button.active {
-    font-weight: bold;
-  }
-
-  .tabcontent {
-    display: none;
-  }
 </style>
 
 {% endblock %}
@@ -259,17 +238,15 @@
   <p class="username">u/{{username}}</p>
 
   <div class="text-container">
-    <div class="tab">
-      <button class="tablinks" onclick="openTab(event, 'myPosts')">My Posts </button>
-      <span>|</span>
-      <button class="tablinks" onclick="openTab(event, 'savedPosts')">Saved Posts</button>
+    <div class="">
+      <button id="tabBtn">My Posts</button>
     </div>
   </div>
 
   {% if user_posts %}
 
   <div class="post-container">
-    <div id="myPosts" class="tabcontent">
+    <div id="myPosts" style="display:block">
       {%for post in user_posts %}
 
       <div class="post">
@@ -426,44 +403,18 @@
 
   </div>
   {% endif %}
-
-  <div id="savedPosts" class="tabcontent">
-    <div class="no-post-container">
-      {% for i in range (5) %}
-      <div class="no-post">
-        <div class="no-vote-container">
-          <img class="upvote" src="/static/assets/upvote-unselected.png" alt="">
-          <img class="downvote" src="/static/assets/downvote-unselected.png" alt="">
-        </div>
-      </div>
-      {% endfor %}
-    </div>
-  </div>
-
-
 </div>
 
 
 <script>
-  function openTab(evt, myPosts) {
-    // Declare all variables
-    var i, tabcontent, tablinks;
-
-    // Get all elements with class="tabcontent" and hide them
-    tabcontent = document.getElementsByClassName("tabcontent");
-    for (i = 0; i < tabcontent.length; i++) {
-      tabcontent[i].style.display = "none";
+  const div = document.getElementById('myPosts')
+  const btn = document.getElementById('tabBtn')
+  btn.onclick = function () {
+    if (div.style.display !== "none") {
+      div.style.display = "none"
+    } else {
+      div.style.display = "block"
     }
-
-    // Get all elements with class="tablinks" and remove the class "active"
-    tablinks = document.getElementsByClassName("tablinks");
-    for (i = 0; i < tablinks.length; i++) {
-      tablinks[i].className = tablinks[i].className.replace(" active", "");
-    }
-
-    // Show the current tab, and add an "active" class to the button that opened the tab
-    document.getElementById(myPosts).style.display = "block";
-    evt.currentTarget.className += " active";
   }
 </script>
 
