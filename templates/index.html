@@ -187,6 +187,10 @@
   .sort-buttons button:hover {
     transform: translateY(-0.25em);
   }
+
+  .post-link {
+    text-decoration: none;
+  }
 </style>
 {% endblock %}
 {% block body %}
@@ -327,9 +331,11 @@
           </div>
 
           <div class="post-title">
-            <h3>{{post.title}}</h3>
+            <a class="post-link" href="/post">
+              <h3>{{post.title}}</h3>
+            </a>
           </div>
-          </a>
+
         </div>
       </div>
       <div class="content-container">
