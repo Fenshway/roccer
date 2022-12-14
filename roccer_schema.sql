@@ -29,7 +29,8 @@ CREATE TABLE IF NOT EXISTS post (
 	stored_image_path VARCHAR(255) NULL,
 	post_text VARCHAR(2000) NULL,
 	created_at timestamp NOT NULL DEFAULT now(),
-	posted_by_id INT NOT NULL,
+	posted_by_id INT NULL,
+	post_bot_stashed BOOLEAN NOT NULL DEFAULT false,
 
 	PRIMARY KEY (post_id),
 	FOREIGN KEY (posted_by_id) REFERENCES user_account(user_account_id) ON DELETE CASCADE

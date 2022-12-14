@@ -52,8 +52,9 @@ class Post(db.Model):
         db.ForeignKey('user_account.user_account_id'), nullable=True)
         
     posted_by = db.relationship('User_account', backref='posts')
+    post_bot_stashed = db.Column(db.Boolean, nullable = False, default=False)
 
-    def __init__(self, title, post_type, embedded_video_link, stored_video_path, stored_image_path, post_text, posted_by_id):
+    def __init__(self, title, post_type, embedded_video_link, stored_video_path, stored_image_path, post_text, posted_by_id, stashed=False):
         self.title = title
         self.post_type = post_type
         self.embedded_video_link = embedded_video_link
@@ -61,6 +62,7 @@ class Post(db.Model):
         self.stored_image_path = stored_image_path
         self.post_text = post_text
         self.posted_by_id = posted_by_id
+        self.post_bot_stashed = stashed
     
     def get_vote_count(post):
         total = 0

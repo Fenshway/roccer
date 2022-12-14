@@ -7,6 +7,11 @@ from flask_bcrypt import Bcrypt
 from src.repositories.user_account_repository import user_repository_singleton
 from src.repositories.post_repository import post_repository_singleton
 from sqlalchemy import update
+import requests
+import time
+import atexit
+from apscheduler.schedulers.background import BackgroundScheduler
+from post_bot import post_bot_singleton
 
 
 load_dotenv()
@@ -16,9 +21,21 @@ app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URI')
 app.secret_key = os.getenv('APP_SECRET_KEY')
 
+app.config['YOUTUBE_API_KEY'] = os.environ.get('YOUTUBE_API_KEY')
+
 db.init_app(app)
 
 bcrypt = Bcrypt(app)
+
+@app.before_first_request
+def init_scheduler():
+    scheduler = BackgroundScheduler()
+    scheduler.add_job(func=post_bot_singleton.preform_post, trigger="interval", seconds= post_bot_singleton.UPDATE_SECONDS)
+    scheduler.start()
+    # Shut down the scheduler when exiting the app
+    atexit.register(lambda: scheduler.shutdown())
+
+
 def get_index_render_template(for_posts):
     states = []
     username = None
