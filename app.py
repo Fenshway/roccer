@@ -44,6 +44,7 @@ def get_index_render_template(for_posts):
 @app.route('/', methods=['POST', 'GET'])
 def index():
     all_posts = post_repository_singleton.get_all_posts()
+
     return(get_index_render_template(all_posts))
 
 
@@ -306,8 +307,13 @@ def search():
     topic = request.args.get('topic')
     order = request.args.get('order')
     if order:
-        all_posts = post_repository_singleton.get_all_posts_ordered()
-        return(get_index_render_template(all_posts))
+        if order == "1":
+            all_posts = post_repository_singleton.get_all_posts_ordered()
+            return(get_index_render_template(all_posts))
+        elif order == "2":
+            all_posts = post_repository_singleton.get_all_posts_ordered_by_vote()
+            return(get_index_render_template(all_posts))
+            
     searched_posts = post_repository_singleton.search_post(topic)
     return(get_index_render_template(searched_posts))
 

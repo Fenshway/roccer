@@ -92,8 +92,22 @@
     color: gray;
   }
 
+  .text-post p {
+    width: 635px;
+  }
+
   .stored_img img {
-    width: 100%;
+    width: 635px;
+    height: 350px;
+  }
+
+  .stored_vid video {
+    width: 635px;
+    height: 350px;
+  }
+
+  .embedded_vid iframe {
+    width: 635px;
     height: 350px;
   }
 
@@ -101,13 +115,83 @@
     color: gray;
   }
 
-  .post-title {
-    color: black;
+  p.light {
+    margin-bottom: 5px;
   }
 
-  .stored_vid video {
-    width: 100%;
-    height: 350px;
+  .post-header {
+    display: flex;
+    color: #808080;
+  }
+
+  .post-header span {
+    margin-bottom: 13px;
+    font-weight: 600;
+  }
+
+  .header-dot-divider {
+    height: 15px;
+    display: inline-flex;
+    align-items: center;
+    margin: 0px 5px;
+  }
+
+  .post-title h3 {
+    color: black;
+    margin-bottom: 0px;
+  }
+
+  .comment {
+    padding: 10px 0px 10px 50px;
+    color: #808080;
+    font-weight: 600;
+  }
+
+  .comment svg {
+    margin-right: 5px;
+  }
+
+  .center-sort-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 15px;
+  }
+
+  .sort-container {
+    width: 776px;
+    background-color: white;
+    padding: 10px 12px;
+  }
+
+  .sort-container span {
+    font-weight: bold;
+    padding-right: 10px;
+    padding-left: 8px;
+  }
+
+  .sort-buttons {
+    display: flex;
+    padding-top: 5px;
+  }
+
+  .sort-buttons button:nth-of-type(1) {
+    margin-right: 5px;
+  }
+
+  .sort-buttons button {
+    padding: 5px 12px;
+    border: 2px solid black;
+    border-radius: 20px;
+    background-color: #EDEFF1;
+    transition: 0.3s;
+  }
+
+  .sort-buttons button:hover {
+    transform: translateY(-0.25em);
+  }
+
+  .post-link {
+    text-decoration: none;
   }
 </style>
 {% endblock %}
@@ -122,7 +206,7 @@
     if (vote_count != null) {
       document.getElementById(at.toString() + "count").innerHTML = vote_count;
     }
-    switch(vote_state) {
+    switch (vote_state) {
       case 0:
         document.getElementById(at.toString() + "downvote").innerHTML = '<img src="static/assets/downvote-unselected.png">';
         document.getElementById(at.toString() + "upvote").innerHTML = '<img src="static/assets/upvote-unselected.png">';
@@ -139,9 +223,9 @@
         break
     }
   }
-  
 
-  function votePressed(postID, vote,index) {
+
+  function votePressed(postID, vote, index) {
     newState = 0
     if (vote == "upvote") {
       newState = 1
@@ -149,89 +233,139 @@
       newState = 2
     }
     $.ajax({
-        type:'POST',
-        url:'/updatePostVotes',
-        data:{
-          post: postID,
-          vote: newState
-        },
-        success:function(data)
-        {
-          if (data["status"] == "200") {
-            updatePostVoteUI(index, data["vote_count"], data["state"]);
-          } else {
-            window.location.replace("/login_page");
-          }
+      type: 'POST',
+      url: '/updatePostVotes',
+      data: {
+        post: postID,
+        vote: newState
+      },
+      success: function (data) {
+        if (data["status"] == "200") {
+          updatePostVoteUI(index, data["vote_count"], data["state"]);
+        } else {
+          window.location.replace("/login_page");
+        }
 
-        },
-      })
+      },
+    })
   }
 
 
-  </script>
-  {% if posts == [] %}
+</script>
+{% if posts == [] %}
 <h2 class="text-center">Nothing to see here. Create a post by selecting the 'create post' button</h2>
-  {% endif %}
-  {% if posts != {} %}
-  <div class="background">
-    {% for post in posts %}
-    <div class="container container-h" >
-      <div class="post-container" >
-        <div class="header-container">
-          <div class="vote-container">
-            <button id="{{ loop.index|string }}upvote" class="vote-button upvote" onclick="votePressed('{{post.post_id}}', 'upvote', '{{loop.index}}')">
-              {% if vote_states != [] %}
-                {% if vote_states[loop.index - 1] == 0 %}
-                <img src="static/assets/upvote-unselected.png">
-                {% endif %}
-                {% if vote_states[loop.index - 1] == 1 %}
-                <img src="static/assets/upvote-selected.png">
-                {% endif %} 
-                {% if vote_states[loop.index - 1] == 2 %}
-                <img src="static/assets/upvote-unselected.png">
-                {% endif %} 
-              {% endif %}
-              {% if vote_states == [] %}
-                <img src="static/assets/upvote-unselected.png">
-              {% endif %}
-              
-            </button>
-            <h6 id="{{ loop.index|string }}count"class="center">{{post.get_vote_count()}}</h6>
-            <button id="{{ loop.index|string }}downvote" class="vote-button downvote" onclick="votePressed('{{post.post_id}}', 'downvote', '{{loop.index}}')">
-              {% if vote_states != [] %}
-              {% if vote_states[loop.index - 1] == 0 %}
-              <img src="static/assets/downvote-unselected.png">
-              {% endif %}
-              {% if vote_states[loop.index - 1] == 1 %}
-              <img src="static/assets/downvote-unselected.png">
-              {% endif %} 
-              {% if vote_states[loop.index - 1] == 2 %}
-              <img src="static/assets/downvote-selected.png">
-              {% endif %} 
+{% endif %}
+{% if posts != {} %}
+<div class="background">
+
+  
+    <div class="center-sort-container">
+      <div class="sort-container">
+        <span>Sort By: </span>
+        <div class="sort-buttons">
+          <form action="/search" method="get">
+            <input name="order" value="1" class="form-control me-2" type="hidden" style="width:600px;"
+              placeholder="Search Roccer">
+          <button type="submit" id="sort"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+              class="bi bi-stars" viewBox="0 0 16 16">
+              <path
+                d="M7.657 6.247c.11-.33.576-.33.686 0l.645 1.937a2.89 2.89 0 0 0 1.829 1.828l1.936.645c.33.11.33.576 0 .686l-1.937.645a2.89 2.89 0 0 0-1.828 1.829l-.645 1.936a.361.361 0 0 1-.686 0l-.645-1.937a2.89 2.89 0 0 0-1.828-1.828l-1.937-.645a.361.361 0 0 1 0-.686l1.937-.645a2.89 2.89 0 0 0 1.828-1.828l.645-1.937zM3.794 1.148a.217.217 0 0 1 .412 0l.387 1.162c.173.518.579.924 1.097 1.097l1.162.387a.217.217 0 0 1 0 .412l-1.162.387A1.734 1.734 0 0 0 4.593 5.69l-.387 1.162a.217.217 0 0 1-.412 0L3.407 5.69A1.734 1.734 0 0 0 2.31 4.593l-1.162-.387a.217.217 0 0 1 0-.412l1.162-.387A1.734 1.734 0 0 0 3.407 2.31l.387-1.162zM10.863.099a.145.145 0 0 1 .274 0l.258.774c.115.346.386.617.732.732l.774.258a.145.145 0 0 1 0 .274l-.774.258a1.156 1.156 0 0 0-.732.732l-.258.774a.145.145 0 0 1-.274 0l-.258-.774a1.156 1.156 0 0 0-.732-.732L9.1 2.137a.145.145 0 0 1 0-.274l.774-.258c.346-.115.617-.386.732-.732L10.863.1z" />
+            </svg> New</button>
+          </form>
+          <form action="/search" method="get">
+            <input name="order" value="2" class="form-control me-2" type="hidden" style="width:600px;"
+              placeholder="Search Roccer">
+          <button type="submit"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+              class="bi bi-rocket-takeoff-fill" viewBox="0 0 16 16">
+              <path
+                d="M12.17 9.53c2.307-2.592 3.278-4.684 3.641-6.218.21-.887.214-1.58.16-2.065a3.578 3.578 0 0 0-.108-.563 2.22 2.22 0 0 0-.078-.23V.453c-.073-.164-.168-.234-.352-.295a2.35 2.35 0 0 0-.16-.045 3.797 3.797 0 0 0-.57-.093c-.49-.044-1.19-.03-2.08.188-1.536.374-3.618 1.343-6.161 3.604l-2.4.238h-.006a2.552 2.552 0 0 0-1.524.734L.15 7.17a.512.512 0 0 0 .433.868l1.896-.271c.28-.04.592.013.955.132.232.076.437.16.655.248l.203.083c.196.816.66 1.58 1.275 2.195.613.614 1.376 1.08 2.191 1.277l.082.202c.089.218.173.424.249.657.118.363.172.676.132.956l-.271 1.9a.512.512 0 0 0 .867.433l2.382-2.386c.41-.41.668-.949.732-1.526l.24-2.408Zm.11-3.699c-.797.8-1.93.961-2.528.362-.598-.6-.436-1.733.361-2.532.798-.799 1.93-.96 2.528-.361.599.599.437 1.732-.36 2.531Z" />
+              <path
+                d="M5.205 10.787a7.632 7.632 0 0 0 1.804 1.352c-1.118 1.007-4.929 2.028-5.054 1.903-.126-.127.737-4.189 1.839-5.18.346.69.837 1.35 1.411 1.925Z" />
+            </svg> Top</button>
+            </form>
+        </div>
+      </div>
+    </div>
+
+  {% for post in posts %}
+  <div class="container container-h">
+    <div class="post-container">
+      <div class="header-container">
+        <div class="vote-container">
+          <button id="{{ loop.index|string }}upvote" class="vote-button upvote"
+            onclick="votePressed('{{post.post_id}}', 'upvote', '{{loop.index}}')">
+            {% if vote_states != [] %}
+            {% if vote_states[loop.index - 1] == 0 %}
+            <img src="static/assets/upvote-unselected.png">
+            {% endif %}
+            {% if vote_states[loop.index - 1] == 1 %}
+            <img src="static/assets/upvote-selected.png">
+            {% endif %}
+            {% if vote_states[loop.index - 1] == 2 %}
+            <img src="static/assets/upvote-unselected.png">
+            {% endif %}
             {% endif %}
             {% if vote_states == [] %}
-              <img src="static/assets/downvote-unselected.png">
+            <img src="static/assets/upvote-unselected.png">
             {% endif %}
-              
-            </button>
+
+          </button>
+          <h6 id="{{ loop.index|string }}count" class="center">{{post.get_vote_count()}}</h6>
+          <button id="{{ loop.index|string }}downvote" class="vote-button downvote"
+            onclick="votePressed('{{post.post_id}}', 'downvote', '{{loop.index}}')">
+            {% if vote_states != [] %}
+            {% if vote_states[loop.index - 1] == 0 %}
+            <img src="static/assets/downvote-unselected.png">
+            {% endif %}
+            {% if vote_states[loop.index - 1] == 1 %}
+            <img src="static/assets/downvote-unselected.png">
+            {% endif %}
+            {% if vote_states[loop.index - 1] == 2 %}
+            <img src="static/assets/downvote-selected.png">
+            {% endif %}
+            {% endif %}
+            {% if vote_states == [] %}
+            <img src="static/assets/downvote-unselected.png">
+            {% endif %}
+
+          </button>
+        </div>
+        <div>
+          <div class="post-header">
+            <span class="">Posted by u/</span>
+            <span>{{post.posted_by.username}}</span>
+            <span class="header-dot-divider">.</span>
+            <span>{{post.get_time_text()}}</span>
           </div>
+
+          <div class="post-title">
+            <a class="post-link" href="/post">
+              <h3>{{post.title}}</h3>
+            </a>
+          </div>
+
           <div >
             <p class="light">Posted by u/{{post.posted_by.username}} {{post.get_time_text()}}</p>
             <a class="post-link" href="/post">
               <h3>{{post.title}}</h3>
             </a>
           </a>
+
         </div>
       </div>
       <div class="content-container">
         {% if post.post_type == "text" %}
-        <p> {{post.post_text}}</p>
+        <div class="text-post">
+          <p> {{post.post_text}}</p>
+        </div>
         {% endif %}
 
         {% if post.post_type == "embedded_video" %}
-        <iframe width=100% height="350" src='{{post.embedded_video_link}}' frameborder="0" allowfullscreen>
+        <div class="embedded_vid">
+          <iframe src='{{post.embedded_video_link}}' frameborder="0" allowfullscreen>
 
-        </iframe>
+          </iframe>
+        </div>
         {% endif %}
         {% if post.post_type == "stored_video" %}
         <div class="stored_vid">
@@ -248,7 +382,25 @@
 
         {% endif %}
       </div>
-      <p class="light content-container">{{post.comments|length}} comments</p>
+
+      {% if post.comments|length != 1 %}
+      <p class="light comment"> <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+          class="bi bi-chat-left-dots" viewBox="0 0 16 16">
+          <path
+            d="M14 1a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H4.414A2 2 0 0 0 3 11.586l-2 2V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12.793a.5.5 0 0 0 .854.353l2.853-2.853A1 1 0 0 1 4.414 12H14a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z" />
+          <path
+            d="M5 6a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm4 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm4 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0z" />
+        </svg> {{post.comments|length}} comments</p>
+
+      {% else %}
+      <p class="light comment"> <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+          class="bi bi-chat-left-dots" viewBox="0 0 16 16">
+          <path
+            d="M14 1a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H4.414A2 2 0 0 0 3 11.586l-2 2V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12.793a.5.5 0 0 0 .854.353l2.853-2.853A1 1 0 0 1 4.414 12H14a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z" />
+          <path
+            d="M5 6a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm4 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm4 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0z" />
+        </svg> {{post.comments|length}} comment</p>
+      {% endif %}
     </div>
   </div>
 

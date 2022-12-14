@@ -15,7 +15,7 @@
 
   </style>
   <title>{% block title %}{% endblock %}</title>
-  {% block style %} {% endblock %}
+  {% block style %}{% endblock %}
 </head>
 
 <body>
@@ -32,22 +32,17 @@
     <div class="collapse navbar-collapse justify-content-center" id="navbarSupportedContent">
       <form class="form-inline d-flex mx-auto" action="/search" method="get">
         <input name="topic" class="form-control me-2" type="search" style="width:600px;" placeholder="Search Roccer">
-        <button type="submit" class="btn btn-light">Search</button>
-        
+        <button type="submit" class="btn btn-light search">Search</button>
       </form>
-      <form action="/search" method="get">
-        <input name="order" value="1" class="form-control me-2" type="hidden" style="width:600px;" placeholder="Search Roccer">
-        <button id="sort" class="btn btn-primary">Sort</button>
-      </form>
-      
+
+
       <ul class="navbar-nav d-flex">
-      {% if username %}
+        {% if username %}
         <li class="nav-item dropdown ms-auto">
           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown"
             aria-haspopup="true" aria-expanded="false">{{username}}</a>
           <div class="dropdown-menu" aria-labelledby="navbarDropdown">
             <a class="dropdown-item" href="/">Home</a>
-            <a class="dropdown-item" href="#">Search</a>
             <a class="dropdown-item" href="/profile">Profile</a>
             <a class="dropdown-item" href="/profile/settings">Settings</a>
             <div class="dropdown-divider"></div>
@@ -69,9 +64,11 @@
         </button>
       </a>
       {% else %}
-        <div>asdfasas</div> <!--don't delete this unless to fix-->
-        <a class="nav-link text-light" href="/login_page">Login/Register</a>
-        <div>dfas</div> <!--don't delete this unless to fix-->
+      <div>asdfasas</div>
+      <!--don't delete this unless to fix-->
+      <a class="nav-link text-light" href="/login_page">Login/Register</a>
+      <div>dfas</div>
+      <!--don't delete this unless to fix-->
       {% endif %}
     </div>
   </nav>
