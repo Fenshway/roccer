@@ -83,27 +83,24 @@
         <div class="col">
           <h6 class="mb-0">Language Settings</h6>   
         </div>
-        <div class="col text-secondary">
+        <div class="col">
           English
         </div>
       </div>
       <hr>
       <div class="row">
         <div class="col">
-          <a class="btn btn-info" href="/update_user_form" >Update Settings</a>
+          <h6><a class="btn btn-info" href="/update_user_form">Update Settings</a></h6>
         </div>
-
-       <form action="/delete/<user_account_id>" method="post">
-    <input type="hidden" name="user_account_id" value="{{ user_account_id }}">
-    <button class="btn btn-danger" type="submit">
-        Delete Account
-    </button>
-</form>
-
-      
+        <div class="col">
+          <form action="/delete/<user_account_id>" method="post">
+            <input type="hidden" name="user_account_id" value="{{ user_account_id }}">
+            <button class="btn btn-danger col" type="submit">Delete Account</button>
+          </form>
+        </div>
       </div>
     </div>
   </div>
-
+</div>
 
 {% endblock %}
