@@ -76,8 +76,6 @@ class Post(db.Model):
 
     def get_time_text(post):
         now = datetime.now()
-        print(post.created_at)
-        print(now)
         minutes = (now - post.created_at).total_seconds() / 60
         if minutes < 2:
             return('1 minute ago')
