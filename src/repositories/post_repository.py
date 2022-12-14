@@ -62,8 +62,8 @@ class PostRepository:
         db.session.commit()
         return new_post
     
-    def create_post_text(self, title, post_text, posted_by_id):
-        new_post = Post(title, 'text', None, None, None, post_text, posted_by_id)
+    def create_post_text(self, title, post_text, posted_by_id, stashed = False):
+        new_post = Post(title, 'text', None, None, None, post_text, posted_by_id, stashed)
         db.session.add(new_post)
         db.session.commit()
         return new_post

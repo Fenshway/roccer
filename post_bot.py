@@ -11,8 +11,8 @@ import random
 import requests
 
 class Post_bot:
-    AVERAGE_POST_PER_HOUR = 10
-    UPDATE_SECONDS = 300
+    AVERAGE_POST_PER_HOUR = 3
+    UPDATE_SECONDS = 1200
 
     def preform_post(self):
         with app.app.app_context():
@@ -66,8 +66,13 @@ class Post_bot:
                                 title = result['snippet']['title']
                                 url = 'https://www.youtube.com/embed/' + str(result['id'])
                                 embedable = result['status']['embeddable']
+                                watch_url = 'https://www.youtube.com/watch?v=' + str(result['id'])
+
                                 if post_repository_singleton.post_has_unique_title(title) and embedable:
-                                    post_repository_singleton.create_post_embedded_video(title, url, None,True)
+                                    if result['snippet']['channelTitle'] in ['FOX Soccer', 'FIFA'] :
+                                        post_repository_singleton.create_post_text(title, watch_url,None,True)
+                                    else:
+                                        post_repository_singleton.create_post_embedded_video(title, url, None,True)
                 post_repository_singleton.unstash_random_post()
 
 
