@@ -1,3 +1,4 @@
+
 {% extends '_layout.html' %}
 
 {% block title %}Roccer | Post{% endblock %}
@@ -88,8 +89,8 @@
 }
 
 .background {
-  background-color: #DBE0E5;
-}
+    background-color: #DBE0E5;
+  }
 
 .wrap {
   display: flex;
@@ -121,10 +122,6 @@
   border-radius: 11px;
  }
 
- .individual-comment{
-
- }
-
  .comment-text{
   padding-left: 20px;
   padding-top: 15px;
@@ -134,6 +131,24 @@
     width: 60px;
     height: 60px;
  }
+
+
+.reply-box{
+  padding-left: 50px;
+  width: auto;
+  max-width: 500px;
+}
+
+.icon{
+  border-radius: 50%;
+}
+
+.individual-comment{
+  border-bottom: 0.5px solid grey;
+  padding-top: 15px;
+}
+
+
 </style>
 {% endblock %}
 {% block body %}
@@ -143,140 +158,191 @@ integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc="
 crossorigin="anonymous"></script>
 
 <script>
-
-var currentVoteStates = [];
-  function updatePostVoteUI(at) {
-    switch(currentVoteStates[at]) {
+  function updatePostVoteUI(vote_count, vote_state) {
+    if (vote_count != null) {
+      document.getElementById("count").innerHTML = vote_count;
+    }
+    switch (vote_state) {
       case 0:
-        document.getElementById(at.toString() + "downvote").innerHTML = '<img src="static/assets/downvote-unselected.png">';
-        document.getElementById(at.toString() + "upvote").innerHTML = '<img src="static/assets/upvote-unselected.png">';
-
+        document.getElementById("downvote").innerHTML = '<img src="static/assets/downvote-unselected.png">';
+        document.getElementById("upvote").innerHTML = '<img src="static/assets/upvote-unselected.png">';
         break
       case 1:
-        document.getElementById(at.toString() + "upvote").innerHTML = '<img src="static/assets/upvote-selected.png">';
-        document.getElementById(at.toString() + "downvote").innerHTML = '<img src="static/assets/downvote-unselected.png">';
+        document.getElementById("upvote").innerHTML = '<img src="static/assets/upvote-selected.png">';
+        document.getElementById("downvote").innerHTML = '<img src="static/assets/downvote-unselected.png">';
         break
       case 2:
-        document.getElementById(at.toString() + "downvote").innerHTML = '<img src="static/assets/downvote-selected.png">';
-        document.getElementById(at.toString() + "upvote").innerHTML = '<img src="static/assets/upvote-unselected.png">';
+        document.getElementById("downvote").innerHTML = '<img src="static/assets/downvote-selected.png">';
+        document.getElementById("upvote").innerHTML = '<img src="static/assets/upvote-unselected.png">';
         break
       default:
         break
     }
   }
-  
-  function votePressed(postID, vote,index) {
+
+
+  function votePressed(postID, vote) {
     newState = 0
     if (vote == "upvote") {
-      if (currentVoteStates[index] == 1) {
-        newState = 0;
-      } else {
-        newState = 1;
-      }
+      newState = 1
     } else {
-      if (currentVoteStates[index] == 2) {
-        newState = 0;
-      } else {
-        newState= 2;
-      }
+      newState = 2
     }
-      $.ajax({
-          type:'POST',
-          url:'/',
-          data:{
-            post: postID,
-            vote: newState
-          },
-          success:function()
-          {
-            currentVoteStates[index] = newState;
-            updatePostVoteUI(index);
-          }
-        })
+    $.ajax({
+      type: 'POST',
+      url: '/updatePostVotes',
+      data: {
+        post: postID,
+        vote: newState
+      },
+      success: function (data) {
+        if (data["status"] == "200") {
+          updatePostVoteUI( data["vote_count"], data["state"]);
+        } else {
+          window.location.replace("/login_page");
+        }
+
+      },
+    })
   }
 
-  </script>
-  {% if posts == [] %}
-<h2 class="text-center">Please go back to the home page.</h2>
-  {% endif %}
-  {% if posts != {}%}
-  <div class="background">
-    {% for post in posts %}
-    <div class="container container-h" >
-      <div class="post-container" >
-        <div class="header-container">
-          <div class="vote-container">
-            <button id="{{ loop.index|string }}upvote" class="vote-button upvote" onclick="votePressed('{{post.post_id}}', 'upvote', '{{loop.index}}')"><img src="static/assets/upvote-unselected.png"></button>
-            <h6 id="{{ post.post_id|string }}count"class="center">1</h6>
-            <button id="{{ loop.index|string }}downvote" class="vote-button downvote" onclick="votePressed('{{post.post_id}}', 'downvote', '{{loop.index}}')"><img src="static/assets/downvote-unselected.png"></button>
+  // const replyButton = document.getElementById('reply-buttons');
+
+  // replyButton.addEventListener('click', e=>{
+  //   console.log('fuck');
+  //     // e.target.classList.toggle('hide');
+  // });
+
+//   var grabBtn = document.getElementById('.new-btn');
+ 
+//   grabBtn.addEventListener('click', e=>{
+//     const grabNewSection = document.querySelector("reply-buttons");
+//     grabNewSection.classList.toggle('hide');
+
+// });
+
+</script>
+
+<div class="background">
+  <div class="container container-h">
+    <div class="post-container">
+      <div class="header-container">
+        <div class="vote-container">
+          <button id="upvote" class="vote-button upvote"
+            onclick="votePressed('{{post.post_id}}', 'upvote')">
+            {% if vote_state == 0 %}
+              <img src="static/assets/upvote-unselected.png">
+            {% endif %}
+            {% if vote_state == 1 %}
+              <img src="static/assets/upvote-selected.png">
+            {% endif %}
+            {% if vote_state == 2 %}
+              <img src="static/assets/upvote-unselected.png">
+            {% endif %}
+
+          </button>
+          <h6 id="count" class="center">{{post.get_vote_count()}}</h6>
+          <button id="downvote" class="vote-button downvote"
+            onclick="votePressed('{{post.post_id}}', 'downvote')">
+            {% if vote_state == 0 %}
+              <img src="static/assets/downvote-unselected.png">
+            {% endif %}
+            {% if vote_state == 1 %}
+              <img src="static/assets/downvote-unselected.png">
+            {% endif %}
+            {% if vote_state == 2 %}
+              <img src="static/assets/downvote-selected.png">
+            {% endif %}
+
+          </button>
+        </div>
+        <div>
+          <div class="post-header">
+            <span class="">Posted by u/</span>
+            <span>{{post.posted_by.username}}</span>
+            <span class="header-dot-divider">.</span>
+            <span>{{post.get_time_text()}}</span>
           </div>
-          <div>
-            <p class="light">Posted by u/{{post.posted_by.username}} {{post.get_time_text()}}</p>
+
+          <div class="post-title">
             <h3>{{post.title}}</h3>
           </div>
+          </a>
         </div>
-        <div class="content-container">
-          {% if post.post_type == "text" %}
-          <p > {{post.post_text}}</p>
-          {% endif %}
+      </div>
+      <div class="content-container">
+        {% if post.post_type == "text" %}
+        <div class="text-post">
+          <p> {{post.post_text}}</p>
+        </div>
+        {% endif %}
 
-          {% if post.post_type == "embedded_video" %}
-          <iframe width=100% height="350"
-          src= '{{post.embedded_video_link}}' frameborder="0" allowfullscreen>
-          
-        </iframe>
-          {% endif %}
-          {% if post.post_type == "stored_video" %}
-          <div class="stored_vid">
-            <video controls>
-              <source src="/static/assets/post_videos/{{post.stored_video_path}}" type="video/mp4">
-            </video>
-           </div>
-          {% endif %}
+        {% if post.post_type == "embedded_video" %}
+        <div class="embedded_vid">
+          <iframe src='{{post.embedded_video_link}}' frameborder="0" allowfullscreen>
 
-          {% if post.post_type == "stored_image" %}
+          </iframe>
+        </div>
+        {% endif %}
+        {% if post.post_type == "stored_video" %}
+        <div class="stored_vid">
+          <video controls>
+            <source src="/static/assets/post_videos/{{post.stored_video_path}}" type="video/mp4">
+          </video>
+        </div>
+        {% endif %}
+
+        {% if post.post_type == "stored_image" %}
         <div class="stored_img">
           <img src="/static/assets/post_images/{{post.stored_image_path}}" alt="">
         </div>
-
         {% endif %}
-        </div>
-          <p class="light-content-container">{{post.comments|length}} Comment(s)</p>
+      </div>
+      {% if post.comments|length != 1 %}
+      <p class="light comment"> <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+          class="bi bi-chat-left-dots" viewBox="0 0 16 16">
+          <path
+            d="M14 1a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H4.414A2 2 0 0 0 3 11.586l-2 2V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12.793a.5.5 0 0 0 .854.353l2.853-2.853A1 1 0 0 1 4.414 12H14a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z" />
+          <path
+            d="M5 6a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm4 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm4 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0z" />
+        </svg> {{post.comments|length}} comments</p>
 
-          <div class="reply-container"> 
-            <form method="post" action="/reply-comment/{{post.post_id}}"> 
-              <div class="mb-3">
-                <input class="form-control" name="text" id="textComment" rows="5">
-              </div>
-              <div class="reply-btn"> 
-               <button type="submit" class="btn btn-primary">Comment</button> 
-              </div>
-              
-          </form>
-        </div>
+      {% else %}
+      <p class="light comment"> <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+          class="bi bi-chat-left-dots" viewBox="0 0 16 16">
+          <path
+            d="M14 1a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H4.414A2 2 0 0 0 3 11.586l-2 2V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12.793a.5.5 0 0 0 .854.353l2.853-2.853A1 1 0 0 1 4.414 12H14a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z" />
+          <path
+            d="M5 6a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm4 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm4 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0z" />
+        </svg> {{post.comments|length}} comment</p>
+      {% endif %}
+      
 
-        <div class="comment-container">
-          {% for comment in post.comments %} 
-          <div class="individual-comment"> 
-            <img class="mr-3 rounded-circle" id="profile-image" alt="Profile Picture" src="data:image/jpeg;base64,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"/> 
-            <span class="light">Commented by {{post.posted_by.username}} {{comment.created_at}}</span>
-              <div class="comment-text"> 
-                <p> {{comment.comment_text}} </p>
-              </div>
-              <form action="/delete/<comment_id>" method="post">
-                <input type="hidden" name="comment_id" value="{{ comment_id }}">
-                <button class="btn btn-danger" type="submit">
-                    Delete Comment
-                </button>
-            </form>            
+      <div class="reply-container"> 
+        <form method="post" action="/reply-comment/{{post.post_id}}"> 
+          <div class="mb-3">
+            <input class="form-control" name="text" id="textComment" rows="5">
           </div>
-          {% endfor %}
-        </div>
+          <div class="reply-btn"> 
+            <button type="submit" class="btn btn-primary">Comment</button> 
+          </div>
+              
+        </form>
+      </div>
+       
+      <div class="comment-container">
+      {% for comment in post.comments|reverse %} 
+        <div class="individual-comment"> 
+          <img src="/static/assets/profile-pics/{{ comment.commented_by.profile_path }}" width= "35" height="35" alt="Admin" class="icon">
+          <span class="light">Commented by {{comment.commented_by.username}} {{comment.get_time_text()}} </span>
+          <div class="comment-text"> 
+            <p> {{comment.comment_text}} </p>
 
+      {% endfor %}
       </div>
     </div>
-  {% endfor %}  
   </div>
-  {% endif %}
+</div>
+
 
 {% endblock %}
