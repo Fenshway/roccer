@@ -115,4 +115,31 @@ class User_comment(db.Model):
     commented_by_id = db.Column(db.Integer,\
         db.ForeignKey('user_account.user_account_id'), nullable=False)
     commented_by = db.relationship('User_account', backref='comments')
+
+    def get_time_text(self):
+        now = datetime.now()
+        print(self.created_at)
+        print(now)
+        minutes = (now - self.created_at).total_seconds() / 60
+        if minutes < 2:
+            return('1 minute ago')
+        if minutes < 60:
+            return(str(int(minutes)) + ' minutes ago')
         
+        hours = minutes / 60
+        if hours < 2:
+            return('1 hour ago')
+        if hours < 24:
+            return(str(int(hours)) + ' hours ago')
+        
+        days = hours / 24
+        if days < 2:
+            return('1 day ago')
+        if days < 365:
+            return(str(int(days)) + ' days ago')
+
+        years = days / 365
+        if years < 2:
+            return('1 year ago')
+        return(str(int(years)) + ' years ago')
+            

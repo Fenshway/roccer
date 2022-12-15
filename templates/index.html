@@ -187,6 +187,10 @@
   .sort-buttons button:hover {
     transform: translateY(-0.25em);
   }
+
+  .post-url{
+    border-bottom:1px solid black;
+  }
 </style>
 {% endblock %}
 {% block body %}
@@ -219,7 +223,7 @@
   }
 
 
-  function votePressed(postID, vote, index) {
+  function votePressed(postID, vote) {
     newState = 0
     if (vote == "upvote") {
       newState = 1
@@ -327,7 +331,7 @@
           </div>
 
           <div class="post-title">
-            <h3>{{post.title}}</h3>
+           <a class="post-url" href="{{ url_for('post', post_id=post.post_id)}}"> <h3>{{post.title}}</h3> </a>  
           </div>
           </a>
         </div>
