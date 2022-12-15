@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, flash, session, jsonify
+from flask import Flask, render_template, request, redirect, flash, session, jsonify, abort, url_for
 from werkzeug.utils import secure_filename
 import os
 from dotenv import load_dotenv
@@ -112,17 +112,30 @@ def settings():
     return render_template('settings.html', first_name=first_name, last_name=last_name, username=username, profile_path=profile_path)
 
 
-@app.route('/post', methods=['POST', 'GET'])
+@app.route('/post', methods=['GET'])
 def post():
-    if request.method == 'POST':
-        postID = request.form.get("post")
-        vote = request.form.get("vote")
-        ##TODO update vote status on server
-        print(postID, vote)
-    all_posts = post_repository_singleton.get_all_posts()
-
-    if 'user' not in session:
-        return render_template('post.html', posts = all_posts)
+    post_id = request.args.get('post_id', None)
+    post =  post_repository_singleton.get_post_by_id(post_id)
+    vote_state = 0
+    if post != None:
+        if session.get('user') != None:
+            current_user_ID = int(session.get('user')['user_account_id'])
+            user = user_repository_singleton.get_user_by_id(current_user_ID)
+            if user != None: 
+                username = session['user']['username']
+                vote_update = Post_Vote.query.get((current_user_ID, post.post_id))
+            
+                if vote_update != None:
+                    if vote_update.upvote:
+                        vote_state = 1
+                    else:
+                        vote_state = 2
+        return render_template('post.html', post = post, vote_state = vote_state)
+    else:
+        ## return 404
+        return abort(404)
+        
+    
 
     username=session['user']['username']
     return render_template('post.html', posts = all_posts, username=username)
@@ -166,7 +179,8 @@ def create_comment(parent_post_id):
                 flash('Post does not exist.', category='error')
         else:
             print('error no user logged in')
-    return redirect('/post')
+    return redirect(url_for('post', post_id=parent_post_id))
+
 
 @app.get('/create_post')
 def get_create_post():
