@@ -203,11 +203,15 @@
     transform: translateY(-0.25em);
   }
 
-  .post-url{
-    border-bottom:1px solid black;
+  .post-url {
+    border-bottom: 1px solid black;
   }
 
   .post-link {
+    text-decoration: none;
+  }
+
+  .post-url {
     text-decoration: none;
   }
 </style>
@@ -350,7 +354,9 @@
           </div>
 
           <div class="post-title">
-           <a class="post-url" href="{{ url_for('post', post_id=post.post_id)}}"> <h3>{{post.title}}</h3> </a>  
+            <a class="post-url" href="{{ url_for('post', post_id=post.post_id)}}">
+              <h3>{{post.title}}</h3>
+            </a>
           </div>
           </a>
         </div>
